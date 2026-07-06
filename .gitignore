@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcshareddata/swiftpm/
+
+# Build artifacts
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# CocoaPods (not used, but future-proof)
+Pods/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# Signing & secrets
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+*.certSigningRequest
+.env
+.env.*
+
+# AI tooling / private config
+.claude/
+.agents/
+CLAUDE.md

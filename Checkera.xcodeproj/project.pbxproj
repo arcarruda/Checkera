@@ -1,0 +1,962 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		060711659F3734E685FEA62B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279863D9FF87E45B3CC76810 /* SettingsView.swift */; };
+		06E3D5FC88A5DDDF5F1F0241 /* TodayTimelineWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B05F67D42D975EEBAF1C /* TodayTimelineWidget.swift */; };
+		0AC1E0383822E40C327DE14C /* DailyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A4241ADE8E308B86653A1F /* DailyTask.swift */; };
+		1361573DC0282E4D82587B13 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A82C5DAF88ECD43AA5B084 /* SettingsModel.swift */; };
+		14A440D4204B2B2673CBA52C /* ThemePreferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7897A50870E055DB57D12B08 /* ThemePreferenceTests.swift */; };
+		20076A6D3B77A5879A26488B /* SwipeableTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C5EE9862EFC62156A7BA /* SwipeableTaskRow.swift */; };
+		2612A44F9CA248B45FBEAFD1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1964D4298D5897307BB1CA8 /* HomeView.swift */; };
+		2997071B3A44EBB1DA2A372B /* DailyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A4241ADE8E308B86653A1F /* DailyTask.swift */; };
+		2AE1A939E37A834414112CB9 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 57896369CA5108C86973CBA1 /* Localizable.xcstrings */; };
+		2C1819DDE0AE3CCBA52F6EE1 /* DayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D83023333F04B2F128E32A5 /* DayTests.swift */; };
+		2FD0BECC03B6054AC7C9E73E /* AppTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42AD7DA4D64ABE8784860EE3 /* AppTabBar.swift */; };
+		348BB4D11932FDF63CF98837 /* GoldenBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC26E30783237E7AC9231DD /* GoldenBadge.swift */; };
+		361C3A1CD57DA70665B06854 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 57896369CA5108C86973CBA1 /* Localizable.xcstrings */; };
+		36E63DBE0D4FD160DD2A9452 /* TaskRowCompact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B5F0E8D2D1E17EB6177111 /* TaskRowCompact.swift */; };
+		3853B3744D17CDC333D17C0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A25A8C90371CA829AA1A92EC /* Assets.xcassets */; };
+		45EED6BD52605B65CD0B78AE /* SettingsModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B044A5F3E79920A34BD71E /* SettingsModelTests.swift */; };
+		463AD1EAFA263B0CE1FAEC3D /* TaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8C94537B26F796B0A8E3A9 /* TaskRepository.swift */; };
+		46F9EC99CA5211216FF1CDB2 /* SleepWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEB50DE2EFE547A1909DB0D /* SleepWindowTests.swift */; };
+		4B1D1E3CF497472CE988B9D2 /* TaskSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87501F5BF8D8FF465BAD8195 /* TaskSnapshot.swift */; };
+		53E9AD2B3955BF55A751027B /* NotificationDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529A1048749E608A40BEF30 /* NotificationDelegateTests.swift */; };
+		5525607A3E7F1D94303A9A8C /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A36457D5DE5378E525F1EE /* Day.swift */; };
+		56F29126258610118897193A /* DayPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895C05CE37B2D12090639DE /* DayPicker.swift */; };
+		5D1679BF6C07D9FC4359E501 /* CheckeraWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E239310DAE38A27FF7A41F80 /* CheckeraWidgetBundle.swift */; };
+		5E2680B901F3FC018D3A1588 /* TaskStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82224AA71B7049F7A79BBEAE /* TaskStatus.swift */; };
+		5F229DC00C9CC1D8EA7DB330 /* ThemePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6EA84B0DC2DBA2A19DD746 /* ThemePreference.swift */; };
+		64AB92AA87EE31119131DCB8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90201A58D2BF360DAD18908D /* NotificationService.swift */; };
+		730DFFDBABFE879804DACDEB /* NowIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049CCB8A52968EF6D533CE9 /* NowIndicator.swift */; };
+		733C7A2E2590CBE446D38FF5 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB51A5B651AD4FE55E0BB628 /* Clock.swift */; };
+		76C2A1871AEF0E1F2FB78207 /* StatusButtonGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6086D3488E9B4164B29007A1 /* StatusButtonGroup.swift */; };
+		77E6A86DFD428D392F37E090 /* MinuteIntervalTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA99908254771F070253AC80 /* MinuteIntervalTimePicker.swift */; };
+		79B24D41A0A86B2A05294D31 /* AppRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66B6799D06622369944A5BE /* AppRoot.swift */; };
+		7EB278D2168A3EC6A80284A1 /* TaskSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160AB2DE86D8887B21C2C25E /* TaskSnapshotTests.swift */; };
+		809C43AE6F41FE7F4A654B65 /* HomeModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF1847D37F07A5F9139FFE6 /* HomeModelTests.swift */; };
+		859B4AD9374C4F5F45FD5C13 /* NotificationCenterAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B09FDCAB446FC681FEA292CA /* NotificationCenterAdapter.swift */; };
+		87491E5ED9F98F45FB72B4FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A25A8C90371CA829AA1A92EC /* Assets.xcassets */; };
+		90748C927F89ECFBE2063057 /* HourRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6A1551427304326972BE9C /* HourRow.swift */; };
+		931D162B06DF2E117170B449 /* CheckeraWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 84BBEDC5CF108719BC285689 /* CheckeraWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		97E80DDF1F72F61C3DED6455 /* StubNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4D7C90DDB5AE02E4840DFC /* StubNotificationCenter.swift */; };
+		A1B0FA0E3503D6A42537AE85 /* SleepWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5851374CE89AA822E69F34D3 /* SleepWindow.swift */; };
+		A2BAB18B2F091952ACAD6015 /* EmptyDayPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0ADE1F3FA62D42B78B9657 /* EmptyDayPlaceholder.swift */; };
+		A8D8A13DE604512897319C08 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6DC9DB5A7CBECAE041E531 /* TaskType.swift */; };
+		B2BD0AB2B435ED8D48480D2A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E287F0E0F411B92269FED7 /* PersistenceController.swift */; };
+		B50B9295E482BD3675820A3F /* TimelinePlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926A3567304A91D08D6A7718 /* TimelinePlacementTests.swift */; };
+		B53D68F9A62DAC77AD44769E /* DayCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0100FA058F6F2712C1D5EB4E /* DayCopyService.swift */; };
+		B5B31417284E309996291CF5 /* TaskRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63868DF747AB5D7E3FB07B23 /* TaskRepositoryTests.swift */; };
+		B929E30E5E7DB271CBBFADF3 /* SleepWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5851374CE89AA822E69F34D3 /* SleepWindow.swift */; };
+		BF380F3008844ADD169DDE93 /* DailyTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38838FFBB25C7663FD8DA52E /* DailyTaskTests.swift */; };
+		C2C2B93D97F48C7617668C15 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD5D2F80ECB2F057E8FB85 /* NotificationServiceTests.swift */; };
+		C2F32EE5CD2E78544D93539E /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5169A71DA75B84396E58DC8 /* HomeModel.swift */; };
+		C72629041E4CDEC0A85ABEAF /* DayTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8776F582C86015227679285 /* DayTimelineView.swift */; };
+		C9BC0447ADDD8C6FD5F1FB83 /* NotificationCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1468D4B112C4EBD4B7529D /* NotificationCategories.swift */; };
+		CC9253144B62038BCFFE715F /* DayCopyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D897B4163A950FE3F0B16EFE /* DayCopyServiceTests.swift */; };
+		CD0916584AE198DC3A0F8BE0 /* TimelineBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9589FC8954185E14F67053E6 /* TimelineBar.swift */; };
+		CD597702577614C2C603803C /* DayPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15F3B07D393469857B8DB56 /* DayPage.swift */; };
+		CE16DFAA1AD4E00476EAEE74 /* TaskStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82224AA71B7049F7A79BBEAE /* TaskStatus.swift */; };
+		CF1B6C8309F59BFA05684D50 /* TaskEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF95607B6D9C4BDCB4B604CB /* TaskEditorModel.swift */; };
+		D22FDA7F99C29C4E0D5EC46F /* SlideToDeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532C3A5E37D13FF37A6520FB /* SlideToDeleteButton.swift */; };
+		D89B477C0901936B73F5480A /* TaskEditorModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592D3A994948481A7544891A /* TaskEditorModelTests.swift */; };
+		DBD49619422D212111157A8A /* TaskEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194B7574F175C4C90BF2450B /* TaskEditorView.swift */; };
+		DC73D67D8AAC9C51CC7DEAB6 /* TaskSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87501F5BF8D8FF465BAD8195 /* TaskSnapshot.swift */; };
+		DE8A403D66A4A9445188C139 /* TaskDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99E3FC629A3883C3A0CD22D /* TaskDetailSheet.swift */; };
+		DFB007D63F2CD2E43E6E57B5 /* ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34657CE329189449195E60B5 /* ClockTests.swift */; };
+		E41690588F05381FE5184071 /* NotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8A1AC8428D6B5BF03C30C1 /* NotificationDelegate.swift */; };
+		E4CED1A9711ACE148524AA89 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E287F0E0F411B92269FED7 /* PersistenceController.swift */; };
+		E685C0713660655AF7C465A9 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856085D6F974EE9C8744480E /* AppEnvironment.swift */; };
+		E7A5BC73CE881F689D96D623 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6DC9DB5A7CBECAE041E531 /* TaskType.swift */; };
+		EC7F948AB512C95BD4E8F00D /* NotificationTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8510223A85AA7DD6AB7A75 /* NotificationTone.swift */; };
+		EF187561E15FA31826338512 /* BringInTasksButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A624EE0416B12F4BE414DD /* BringInTasksButton.swift */; };
+		F4529CC26AC94154D5D80A9B /* CheckeraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C03FABEEA8AF340435DF02D /* CheckeraApp.swift */; };
+		F5639BEE969AE78760E22E48 /* StubTaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7830A7E7660DACD79DB119 /* StubTaskRepository.swift */; };
+		F8D93CB518B58570D90FD3EE /* TodayTimelineWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A38BDF6D38A1A6782AD14B3 /* TodayTimelineWidgetView.swift */; };
+		FE1714D898127631AD0C8903 /* ScreenshotSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815A4FCFE2DAF88726212128 /* ScreenshotSupport.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1879AC77A8F839B98BCFFDB3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6D6D6EDA9464FFC3FCD49212 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D59BE52320D49F87B1527C1;
+			remoteInfo = CheckeraWidget;
+		};
+		53063D2391275EBFA2758D27 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6D6D6EDA9464FFC3FCD49212 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 97E603EFA3879A4C137FA9CB;
+			remoteInfo = Checkera;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7C203B7233D310917961D0AD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				931D162B06DF2E117170B449 /* CheckeraWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0100FA058F6F2712C1D5EB4E /* DayCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCopyService.swift; sourceTree = "<group>"; };
+		0438C5EE9862EFC62156A7BA /* SwipeableTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeableTaskRow.swift; sourceTree = "<group>"; };
+		0529A1048749E608A40BEF30 /* NotificationDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDelegateTests.swift; sourceTree = "<group>"; };
+		160AB2DE86D8887B21C2C25E /* TaskSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSnapshotTests.swift; sourceTree = "<group>"; };
+		18609F62142E551867B6E823 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		194B7574F175C4C90BF2450B /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
+		1C03FABEEA8AF340435DF02D /* CheckeraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckeraApp.swift; sourceTree = "<group>"; };
+		1D83023333F04B2F128E32A5 /* DayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTests.swift; sourceTree = "<group>"; };
+		1EF1847D37F07A5F9139FFE6 /* HomeModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModelTests.swift; sourceTree = "<group>"; };
+		279863D9FF87E45B3CC76810 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2B8C94537B26F796B0A8E3A9 /* TaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepository.swift; sourceTree = "<group>"; };
+		2C6EA84B0DC2DBA2A19DD746 /* ThemePreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreference.swift; sourceTree = "<group>"; };
+		34657CE329189449195E60B5 /* ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockTests.swift; sourceTree = "<group>"; };
+		37A36457D5DE5378E525F1EE /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		38838FFBB25C7663FD8DA52E /* DailyTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTaskTests.swift; sourceTree = "<group>"; };
+		395CAAD4172B0B14A2EA1524 /* CheckeraWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CheckeraWidget.entitlements; sourceTree = "<group>"; };
+		3E6DC9DB5A7CBECAE041E531 /* TaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
+		42AD7DA4D64ABE8784860EE3 /* AppTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabBar.swift; sourceTree = "<group>"; };
+		463EF1008D25E703DDF5B44E /* Checkera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checkera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A38BDF6D38A1A6782AD14B3 /* TodayTimelineWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTimelineWidgetView.swift; sourceTree = "<group>"; };
+		4C7830A7E7660DACD79DB119 /* StubTaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubTaskRepository.swift; sourceTree = "<group>"; };
+		532C3A5E37D13FF37A6520FB /* SlideToDeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToDeleteButton.swift; sourceTree = "<group>"; };
+		57896369CA5108C86973CBA1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		5851374CE89AA822E69F34D3 /* SleepWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepWindow.swift; sourceTree = "<group>"; };
+		5895C05CE37B2D12090639DE /* DayPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPicker.swift; sourceTree = "<group>"; };
+		592D3A994948481A7544891A /* TaskEditorModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorModelTests.swift; sourceTree = "<group>"; };
+		5A1468D4B112C4EBD4B7529D /* NotificationCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCategories.swift; sourceTree = "<group>"; };
+		5B6F52B84C8EA90E74EF790D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5BC26E30783237E7AC9231DD /* GoldenBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldenBadge.swift; sourceTree = "<group>"; };
+		6086D3488E9B4164B29007A1 /* StatusButtonGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusButtonGroup.swift; sourceTree = "<group>"; };
+		63868DF747AB5D7E3FB07B23 /* TaskRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepositoryTests.swift; sourceTree = "<group>"; };
+		67B5F0E8D2D1E17EB6177111 /* TaskRowCompact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRowCompact.swift; sourceTree = "<group>"; };
+		6EB7AEBD991B23546F84C92B /* CheckeraTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CheckeraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7897A50870E055DB57D12B08 /* ThemePreferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreferenceTests.swift; sourceTree = "<group>"; };
+		815A4FCFE2DAF88726212128 /* ScreenshotSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotSupport.swift; sourceTree = "<group>"; };
+		82224AA71B7049F7A79BBEAE /* TaskStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStatus.swift; sourceTree = "<group>"; };
+		84BBEDC5CF108719BC285689 /* CheckeraWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CheckeraWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		856085D6F974EE9C8744480E /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		87501F5BF8D8FF465BAD8195 /* TaskSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSnapshot.swift; sourceTree = "<group>"; };
+		8F0ADE1F3FA62D42B78B9657 /* EmptyDayPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDayPlaceholder.swift; sourceTree = "<group>"; };
+		90201A58D2BF360DAD18908D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		9049CCB8A52968EF6D533CE9 /* NowIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowIndicator.swift; sourceTree = "<group>"; };
+		926A3567304A91D08D6A7718 /* TimelinePlacementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelinePlacementTests.swift; sourceTree = "<group>"; };
+		9589FC8954185E14F67053E6 /* TimelineBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineBar.swift; sourceTree = "<group>"; };
+		9C8A1AC8428D6B5BF03C30C1 /* NotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDelegate.swift; sourceTree = "<group>"; };
+		A15F3B07D393469857B8DB56 /* DayPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPage.swift; sourceTree = "<group>"; };
+		A25A8C90371CA829AA1A92EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A73B0175963C6843E52416CE /* Checkera.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Checkera.entitlements; sourceTree = "<group>"; };
+		A7A624EE0416B12F4BE414DD /* BringInTasksButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BringInTasksButton.swift; sourceTree = "<group>"; };
+		AF6A1551427304326972BE9C /* HourRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourRow.swift; sourceTree = "<group>"; };
+		B09FDCAB446FC681FEA292CA /* NotificationCenterAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterAdapter.swift; sourceTree = "<group>"; };
+		B633B05F67D42D975EEBAF1C /* TodayTimelineWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTimelineWidget.swift; sourceTree = "<group>"; };
+		B66B6799D06622369944A5BE /* AppRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoot.swift; sourceTree = "<group>"; };
+		C3A4241ADE8E308B86653A1F /* DailyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTask.swift; sourceTree = "<group>"; };
+		C5E287F0E0F411B92269FED7 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		C8B044A5F3E79920A34BD71E /* SettingsModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModelTests.swift; sourceTree = "<group>"; };
+		CB51A5B651AD4FE55E0BB628 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		CC8510223A85AA7DD6AB7A75 /* NotificationTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTone.swift; sourceTree = "<group>"; };
+		CCEB50DE2EFE547A1909DB0D /* SleepWindowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepWindowTests.swift; sourceTree = "<group>"; };
+		D897B4163A950FE3F0B16EFE /* DayCopyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCopyServiceTests.swift; sourceTree = "<group>"; };
+		D99E3FC629A3883C3A0CD22D /* TaskDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailSheet.swift; sourceTree = "<group>"; };
+		E239310DAE38A27FF7A41F80 /* CheckeraWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckeraWidgetBundle.swift; sourceTree = "<group>"; };
+		E5169A71DA75B84396E58DC8 /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		E8776F582C86015227679285 /* DayTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTimelineView.swift; sourceTree = "<group>"; };
+		EA99908254771F070253AC80 /* MinuteIntervalTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinuteIntervalTimePicker.swift; sourceTree = "<group>"; };
+		F0A82C5DAF88ECD43AA5B084 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
+		F0FD5D2F80ECB2F057E8FB85 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
+		F1964D4298D5897307BB1CA8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		FB4D7C90DDB5AE02E4840DFC /* StubNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNotificationCenter.swift; sourceTree = "<group>"; };
+		FF95607B6D9C4BDCB4B604CB /* TaskEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorModel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		09D67D40C629A14D6521D5FC = {
+			isa = PBXGroup;
+			children = (
+				61884DD55406C4467908EF7E /* Checkera */,
+				D8A5995EE9FCC62FBF8F170E /* CheckeraTests */,
+				782452FC936F264226208B6D /* CheckeraWidget */,
+				308CC660D71670E592846102 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1CD328B81CB03C8495F9B933 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				1EF1847D37F07A5F9139FFE6 /* HomeModelTests.swift */,
+				926A3567304A91D08D6A7718 /* TimelinePlacementTests.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		1DCB51D9427D921AEC8E7ABF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A25A8C90371CA829AA1A92EC /* Assets.xcassets */,
+				57896369CA5108C86973CBA1 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2DE4E41657ECE329573025CD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				34657CE329189449195E60B5 /* ClockTests.swift */,
+				D897B4163A950FE3F0B16EFE /* DayCopyServiceTests.swift */,
+				0529A1048749E608A40BEF30 /* NotificationDelegateTests.swift */,
+				F0FD5D2F80ECB2F057E8FB85 /* NotificationServiceTests.swift */,
+				63868DF747AB5D7E3FB07B23 /* TaskRepositoryTests.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		308CC660D71670E592846102 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				463EF1008D25E703DDF5B44E /* Checkera.app */,
+				6EB7AEBD991B23546F84C92B /* CheckeraTests.xctest */,
+				84BBEDC5CF108719BC285689 /* CheckeraWidget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		335EE97D94F639DD1249C6AE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				FB4D7C90DDB5AE02E4840DFC /* StubNotificationCenter.swift */,
+				4C7830A7E7660DACD79DB119 /* StubTaskRepository.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		3424352BC8D276901ECCD881 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				856085D6F974EE9C8744480E /* AppEnvironment.swift */,
+				B66B6799D06622369944A5BE /* AppRoot.swift */,
+				42AD7DA4D64ABE8784860EE3 /* AppTabBar.swift */,
+				1C03FABEEA8AF340435DF02D /* CheckeraApp.swift */,
+				815A4FCFE2DAF88726212128 /* ScreenshotSupport.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		3B3933EA20CFA57F5C78A95C /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				C5E287F0E0F411B92269FED7 /* PersistenceController.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		428C1A141ACA8360290A712B /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				1CD328B81CB03C8495F9B933 /* Home */,
+				BDF448D09461DA9B0C95927B /* Settings */,
+				E7825F1F730362E3D6EECFB7 /* TaskEditor */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		5ECC55DFBFC26FAB5BA5E738 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CB51A5B651AD4FE55E0BB628 /* Clock.swift */,
+				0100FA058F6F2712C1D5EB4E /* DayCopyService.swift */,
+				5A1468D4B112C4EBD4B7529D /* NotificationCategories.swift */,
+				B09FDCAB446FC681FEA292CA /* NotificationCenterAdapter.swift */,
+				9C8A1AC8428D6B5BF03C30C1 /* NotificationDelegate.swift */,
+				90201A58D2BF360DAD18908D /* NotificationService.swift */,
+				2B8C94537B26F796B0A8E3A9 /* TaskRepository.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		61884DD55406C4467908EF7E /* Checkera */ = {
+			isa = PBXGroup;
+			children = (
+				A73B0175963C6843E52416CE /* Checkera.entitlements */,
+				5B6F52B84C8EA90E74EF790D /* Info.plist */,
+				3424352BC8D276901ECCD881 /* App */,
+				9D84C59AEF7F2D391529D522 /* Components */,
+				DB26D444D9417CDB3F7BD71D /* Features */,
+				784BAA4E74DD1532B50C9972 /* Models */,
+				3B3933EA20CFA57F5C78A95C /* Persistence */,
+				1DCB51D9427D921AEC8E7ABF /* Resources */,
+				5ECC55DFBFC26FAB5BA5E738 /* Services */,
+			);
+			path = Checkera;
+			sourceTree = "<group>";
+		};
+		782452FC936F264226208B6D /* CheckeraWidget */ = {
+			isa = PBXGroup;
+			children = (
+				395CAAD4172B0B14A2EA1524 /* CheckeraWidget.entitlements */,
+				E239310DAE38A27FF7A41F80 /* CheckeraWidgetBundle.swift */,
+				18609F62142E551867B6E823 /* Info.plist */,
+				9589FC8954185E14F67053E6 /* TimelineBar.swift */,
+				B633B05F67D42D975EEBAF1C /* TodayTimelineWidget.swift */,
+				4A38BDF6D38A1A6782AD14B3 /* TodayTimelineWidgetView.swift */,
+			);
+			path = CheckeraWidget;
+			sourceTree = "<group>";
+		};
+		784BAA4E74DD1532B50C9972 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C3A4241ADE8E308B86653A1F /* DailyTask.swift */,
+				37A36457D5DE5378E525F1EE /* Day.swift */,
+				CC8510223A85AA7DD6AB7A75 /* NotificationTone.swift */,
+				5851374CE89AA822E69F34D3 /* SleepWindow.swift */,
+				87501F5BF8D8FF465BAD8195 /* TaskSnapshot.swift */,
+				82224AA71B7049F7A79BBEAE /* TaskStatus.swift */,
+				3E6DC9DB5A7CBECAE041E531 /* TaskType.swift */,
+				2C6EA84B0DC2DBA2A19DD746 /* ThemePreference.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9D84C59AEF7F2D391529D522 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				5BC26E30783237E7AC9231DD /* GoldenBadge.swift */,
+				EA99908254771F070253AC80 /* MinuteIntervalTimePicker.swift */,
+				6086D3488E9B4164B29007A1 /* StatusButtonGroup.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A7FC83F62C4527D8153B24F9 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F0A82C5DAF88ECD43AA5B084 /* SettingsModel.swift */,
+				279863D9FF87E45B3CC76810 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		BDF448D09461DA9B0C95927B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C8B044A5F3E79920A34BD71E /* SettingsModelTests.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		CBF044173CDC9AF0C34A2FF9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				38838FFBB25C7663FD8DA52E /* DailyTaskTests.swift */,
+				1D83023333F04B2F128E32A5 /* DayTests.swift */,
+				CCEB50DE2EFE547A1909DB0D /* SleepWindowTests.swift */,
+				7897A50870E055DB57D12B08 /* ThemePreferenceTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D74FF229667966E39409BA7C /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				160AB2DE86D8887B21C2C25E /* TaskSnapshotTests.swift */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
+		D8A5995EE9FCC62FBF8F170E /* CheckeraTests */ = {
+			isa = PBXGroup;
+			children = (
+				428C1A141ACA8360290A712B /* Features */,
+				335EE97D94F639DD1249C6AE /* Helpers */,
+				CBF044173CDC9AF0C34A2FF9 /* Models */,
+				2DE4E41657ECE329573025CD /* Services */,
+				D74FF229667966E39409BA7C /* Widget */,
+			);
+			path = CheckeraTests;
+			sourceTree = "<group>";
+		};
+		DB26D444D9417CDB3F7BD71D /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				E60E3A5D3AA8B2AD8A2777BC /* Home */,
+				A7FC83F62C4527D8153B24F9 /* Settings */,
+				DF5AD358282B2EF04DC46FBE /* TaskEditor */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		DF5AD358282B2EF04DC46FBE /* TaskEditor */ = {
+			isa = PBXGroup;
+			children = (
+				532C3A5E37D13FF37A6520FB /* SlideToDeleteButton.swift */,
+				FF95607B6D9C4BDCB4B604CB /* TaskEditorModel.swift */,
+				194B7574F175C4C90BF2450B /* TaskEditorView.swift */,
+			);
+			path = TaskEditor;
+			sourceTree = "<group>";
+		};
+		E60E3A5D3AA8B2AD8A2777BC /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				A7A624EE0416B12F4BE414DD /* BringInTasksButton.swift */,
+				A15F3B07D393469857B8DB56 /* DayPage.swift */,
+				5895C05CE37B2D12090639DE /* DayPicker.swift */,
+				E8776F582C86015227679285 /* DayTimelineView.swift */,
+				8F0ADE1F3FA62D42B78B9657 /* EmptyDayPlaceholder.swift */,
+				E5169A71DA75B84396E58DC8 /* HomeModel.swift */,
+				F1964D4298D5897307BB1CA8 /* HomeView.swift */,
+				AF6A1551427304326972BE9C /* HourRow.swift */,
+				9049CCB8A52968EF6D533CE9 /* NowIndicator.swift */,
+				0438C5EE9862EFC62156A7BA /* SwipeableTaskRow.swift */,
+				D99E3FC629A3883C3A0CD22D /* TaskDetailSheet.swift */,
+				67B5F0E8D2D1E17EB6177111 /* TaskRowCompact.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		E7825F1F730362E3D6EECFB7 /* TaskEditor */ = {
+			isa = PBXGroup;
+			children = (
+				592D3A994948481A7544891A /* TaskEditorModelTests.swift */,
+			);
+			path = TaskEditor;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0D59BE52320D49F87B1527C1 /* CheckeraWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D2B031A1C6C9941AE074A10 /* Build configuration list for PBXNativeTarget "CheckeraWidget" */;
+			buildPhases = (
+				37B51E3F5925F0C0419EE2DA /* Sources */,
+				473B17135A27C02FEC9A112C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CheckeraWidget;
+			packageProductDependencies = (
+			);
+			productName = CheckeraWidget;
+			productReference = 84BBEDC5CF108719BC285689 /* CheckeraWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		97E603EFA3879A4C137FA9CB /* Checkera */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD6AB1D35DC96B4E5898999E /* Build configuration list for PBXNativeTarget "Checkera" */;
+			buildPhases = (
+				788AD4FDA79AA6DA2D560CD2 /* Sources */,
+				25C78D79ECABFFC3F7106EEF /* Resources */,
+				7C203B7233D310917961D0AD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7925344BE754B51844631C17 /* PBXTargetDependency */,
+			);
+			name = Checkera;
+			packageProductDependencies = (
+			);
+			productName = Checkera;
+			productReference = 463EF1008D25E703DDF5B44E /* Checkera.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C4CBBA444F98B73160101DF1 /* CheckeraTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E8EAA7A0A8B098D39FF2BE1 /* Build configuration list for PBXNativeTarget "CheckeraTests" */;
+			buildPhases = (
+				B0C7A2E809E308A810DB6DAF /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AECF8AE6BA474EA8BAE62103 /* PBXTargetDependency */,
+			);
+			name = CheckeraTests;
+			packageProductDependencies = (
+			);
+			productName = CheckeraTests;
+			productReference = 6EB7AEBD991B23546F84C92B /* CheckeraTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6D6D6EDA9464FFC3FCD49212 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0D59BE52320D49F87B1527C1 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					97E603EFA3879A4C137FA9CB = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = B294AEC58219148D0F7407A2 /* Build configuration list for PBXProject "Checkera" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 09D67D40C629A14D6521D5FC;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				97E603EFA3879A4C137FA9CB /* Checkera */,
+				C4CBBA444F98B73160101DF1 /* CheckeraTests */,
+				0D59BE52320D49F87B1527C1 /* CheckeraWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		25C78D79ECABFFC3F7106EEF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3853B3744D17CDC333D17C0C /* Assets.xcassets in Resources */,
+				361C3A1CD57DA70665B06854 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B17135A27C02FEC9A112C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				87491E5ED9F98F45FB72B4FE /* Assets.xcassets in Resources */,
+				2AE1A939E37A834414112CB9 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		37B51E3F5925F0C0419EE2DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D1679BF6C07D9FC4359E501 /* CheckeraWidgetBundle.swift in Sources */,
+				2997071B3A44EBB1DA2A372B /* DailyTask.swift in Sources */,
+				B2BD0AB2B435ED8D48480D2A /* PersistenceController.swift in Sources */,
+				A1B0FA0E3503D6A42537AE85 /* SleepWindow.swift in Sources */,
+				DC73D67D8AAC9C51CC7DEAB6 /* TaskSnapshot.swift in Sources */,
+				CE16DFAA1AD4E00476EAEE74 /* TaskStatus.swift in Sources */,
+				E7A5BC73CE881F689D96D623 /* TaskType.swift in Sources */,
+				CD0916584AE198DC3A0F8BE0 /* TimelineBar.swift in Sources */,
+				06E3D5FC88A5DDDF5F1F0241 /* TodayTimelineWidget.swift in Sources */,
+				F8D93CB518B58570D90FD3EE /* TodayTimelineWidgetView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		788AD4FDA79AA6DA2D560CD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E685C0713660655AF7C465A9 /* AppEnvironment.swift in Sources */,
+				79B24D41A0A86B2A05294D31 /* AppRoot.swift in Sources */,
+				2FD0BECC03B6054AC7C9E73E /* AppTabBar.swift in Sources */,
+				EF187561E15FA31826338512 /* BringInTasksButton.swift in Sources */,
+				F4529CC26AC94154D5D80A9B /* CheckeraApp.swift in Sources */,
+				733C7A2E2590CBE446D38FF5 /* Clock.swift in Sources */,
+				0AC1E0383822E40C327DE14C /* DailyTask.swift in Sources */,
+				5525607A3E7F1D94303A9A8C /* Day.swift in Sources */,
+				B53D68F9A62DAC77AD44769E /* DayCopyService.swift in Sources */,
+				CD597702577614C2C603803C /* DayPage.swift in Sources */,
+				56F29126258610118897193A /* DayPicker.swift in Sources */,
+				C72629041E4CDEC0A85ABEAF /* DayTimelineView.swift in Sources */,
+				A2BAB18B2F091952ACAD6015 /* EmptyDayPlaceholder.swift in Sources */,
+				348BB4D11932FDF63CF98837 /* GoldenBadge.swift in Sources */,
+				C2F32EE5CD2E78544D93539E /* HomeModel.swift in Sources */,
+				2612A44F9CA248B45FBEAFD1 /* HomeView.swift in Sources */,
+				90748C927F89ECFBE2063057 /* HourRow.swift in Sources */,
+				77E6A86DFD428D392F37E090 /* MinuteIntervalTimePicker.swift in Sources */,
+				C9BC0447ADDD8C6FD5F1FB83 /* NotificationCategories.swift in Sources */,
+				859B4AD9374C4F5F45FD5C13 /* NotificationCenterAdapter.swift in Sources */,
+				E41690588F05381FE5184071 /* NotificationDelegate.swift in Sources */,
+				64AB92AA87EE31119131DCB8 /* NotificationService.swift in Sources */,
+				EC7F948AB512C95BD4E8F00D /* NotificationTone.swift in Sources */,
+				730DFFDBABFE879804DACDEB /* NowIndicator.swift in Sources */,
+				E4CED1A9711ACE148524AA89 /* PersistenceController.swift in Sources */,
+				FE1714D898127631AD0C8903 /* ScreenshotSupport.swift in Sources */,
+				1361573DC0282E4D82587B13 /* SettingsModel.swift in Sources */,
+				060711659F3734E685FEA62B /* SettingsView.swift in Sources */,
+				B929E30E5E7DB271CBBFADF3 /* SleepWindow.swift in Sources */,
+				D22FDA7F99C29C4E0D5EC46F /* SlideToDeleteButton.swift in Sources */,
+				76C2A1871AEF0E1F2FB78207 /* StatusButtonGroup.swift in Sources */,
+				20076A6D3B77A5879A26488B /* SwipeableTaskRow.swift in Sources */,
+				DE8A403D66A4A9445188C139 /* TaskDetailSheet.swift in Sources */,
+				CF1B6C8309F59BFA05684D50 /* TaskEditorModel.swift in Sources */,
+				DBD49619422D212111157A8A /* TaskEditorView.swift in Sources */,
+				463AD1EAFA263B0CE1FAEC3D /* TaskRepository.swift in Sources */,
+				36E63DBE0D4FD160DD2A9452 /* TaskRowCompact.swift in Sources */,
+				4B1D1E3CF497472CE988B9D2 /* TaskSnapshot.swift in Sources */,
+				5E2680B901F3FC018D3A1588 /* TaskStatus.swift in Sources */,
+				A8D8A13DE604512897319C08 /* TaskType.swift in Sources */,
+				5F229DC00C9CC1D8EA7DB330 /* ThemePreference.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0C7A2E809E308A810DB6DAF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFB007D63F2CD2E43E6E57B5 /* ClockTests.swift in Sources */,
+				BF380F3008844ADD169DDE93 /* DailyTaskTests.swift in Sources */,
+				CC9253144B62038BCFFE715F /* DayCopyServiceTests.swift in Sources */,
+				2C1819DDE0AE3CCBA52F6EE1 /* DayTests.swift in Sources */,
+				809C43AE6F41FE7F4A654B65 /* HomeModelTests.swift in Sources */,
+				53E9AD2B3955BF55A751027B /* NotificationDelegateTests.swift in Sources */,
+				C2C2B93D97F48C7617668C15 /* NotificationServiceTests.swift in Sources */,
+				45EED6BD52605B65CD0B78AE /* SettingsModelTests.swift in Sources */,
+				46F9EC99CA5211216FF1CDB2 /* SleepWindowTests.swift in Sources */,
+				97E80DDF1F72F61C3DED6455 /* StubNotificationCenter.swift in Sources */,
+				F5639BEE969AE78760E22E48 /* StubTaskRepository.swift in Sources */,
+				D89B477C0901936B73F5480A /* TaskEditorModelTests.swift in Sources */,
+				B5B31417284E309996291CF5 /* TaskRepositoryTests.swift in Sources */,
+				7EB278D2168A3EC6A80284A1 /* TaskSnapshotTests.swift in Sources */,
+				14A440D4204B2B2673CBA52C /* ThemePreferenceTests.swift in Sources */,
+				B50B9295E482BD3675820A3F /* TimelinePlacementTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7925344BE754B51844631C17 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D59BE52320D49F87B1527C1 /* CheckeraWidget */;
+			targetProxy = 1879AC77A8F839B98BCFFDB3 /* PBXContainerItemProxy */;
+		};
+		AECF8AE6BA474EA8BAE62103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 97E603EFA3879A4C137FA9CB /* Checkera */;
+			targetProxy = 53063D2391275EBFA2758D27 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		054065489F749C570C59FE93 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 2;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 2.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		1D6F5971220EC0C70A922A15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CheckeraWidget/CheckeraWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = CheckeraWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.topera.checkera.widget;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3509AFB0450D2504B4C6C47C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Checkera/Checkera.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Checkera/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.topera.checkera;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5FC0AA70246D4756B3D13330 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 2;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 2.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		61E6F2BD8C2D8B9F42E94A9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Checkera/Checkera.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Checkera/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.topera.checkera;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		64165A101CE4B3BB580878B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CheckeraWidget/CheckeraWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = CheckeraWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.topera.checkera.widget;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F9E943C911910C0EFEB9AD08 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.topera.checkera.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Checkera.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Checkera";
+			};
+			name = Release;
+		};
+		FFCA26ABF57368BDCAE289D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.topera.checkera.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Checkera.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Checkera";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0E8EAA7A0A8B098D39FF2BE1 /* Build configuration list for PBXNativeTarget "CheckeraTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFCA26ABF57368BDCAE289D1 /* Debug */,
+				F9E943C911910C0EFEB9AD08 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3D2B031A1C6C9941AE074A10 /* Build configuration list for PBXNativeTarget "CheckeraWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6F5971220EC0C70A922A15 /* Debug */,
+				64165A101CE4B3BB580878B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B294AEC58219148D0F7407A2 /* Build configuration list for PBXProject "Checkera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FC0AA70246D4756B3D13330 /* Debug */,
+				054065489F749C570C59FE93 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CD6AB1D35DC96B4E5898999E /* Build configuration list for PBXNativeTarget "Checkera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61E6F2BD8C2D8B9F42E94A9F /* Debug */,
+				3509AFB0450D2504B4C6C47C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6D6D6EDA9464FFC3FCD49212 /* Project object */;
+}
