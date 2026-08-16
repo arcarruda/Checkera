@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 """Composite App Store marketing screenshots from raw simulator captures.
 
-Reads raw screenshots from bucket/AppStore/raw/{iphone,ipad}/0{1,2,3}-*.png
+The brand assets are not part of this repository. Point CHECKERA_ASSETS at a
+checkout of the private asset library, or place it alongside this repo as
+../Checkera/bucket (the default).
+
+Reads raw screenshots from $CHECKERA_ASSETS/AppStore/raw/{iphone,ipad}/0{1,2,3}-*.png
 and emits finals at exact Apple-required dimensions:
 
-- bucket/AppStore/iphone-6.5/0{1,2,3}-*.png  at 1242 x 2688
-- bucket/AppStore/ipad-13/0{1,2,3}-*.png     at 2064 x 2752
+- $CHECKERA_ASSETS/AppStore/iphone-6.5/0{1,2,3}-*.png  at 1242 x 2688
+- $CHECKERA_ASSETS/AppStore/ipad-13/0{1,2,3}-*.png     at 2064 x 2752
 
 Each final image: brand green gradient background, headline at top in white,
 device screenshot below with rounded corners and a soft drop shadow.
 """
 from __future__ import annotations
 
+import os
+import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -23,11 +29,26 @@ SF_BOLD = "/System/Library/Fonts/SFNS.ttf"
 SF_DISPLAY = "/System/Library/Fonts/SFNSRounded.ttf"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-MOBILE_APP = SCRIPT_DIR.parent
-REPO_ROOT = MOBILE_APP.parent
-RAW_DIR = REPO_ROOT / "bucket" / "AppStore" / "raw"
-OUT_IPHONE = REPO_ROOT / "bucket" / "AppStore" / "iphone-6.5"
-OUT_IPAD = REPO_ROOT / "bucket" / "AppStore" / "ipad-13"
+REPO_ROOT = SCRIPT_DIR.parent
+# Brand assets live outside this repo; see the module docstring.
+BRAND_ASSETS = Path(
+    os.environ.get("CHECKERA_ASSETS", REPO_ROOT.parent / "Checkera" / "bucket")
+).expanduser()
+RAW_DIR = BRAND_ASSETS / "AppStore" / "raw"
+OUT_IPHONE = BRAND_ASSETS / "AppStore" / "iphone-6.5"
+OUT_IPAD = BRAND_ASSETS / "AppStore" / "ipad-13"
+
+
+def require_brand_assets() -> None:
+    """Fail early and legibly when the private asset library isn't reachable."""
+    if RAW_DIR.is_dir():
+        return
+    sys.exit(
+        f"Raw screenshots not found at {RAW_DIR}\n"
+        "These captures are kept in a separate private repository.\n"
+        "Set CHECKERA_ASSETS to its bucket/ directory, e.g.\n"
+        "  CHECKERA_ASSETS=../Checkera/bucket Scripts/generate-appstore-screenshots.py"
+    )
 
 HEADLINES = [
     ("01-home.png", "Plan your day,\nhour by hour."),
@@ -131,10 +152,11 @@ def composite(
     )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(out_path, "PNG", optimize=True)
-    print(f"wrote {out_path.relative_to(REPO_ROOT)}  ({canvas_size[0]}x{canvas_size[1]})")
+    print(f"wrote {out_path.relative_to(BRAND_ASSETS)}  ({canvas_size[0]}x{canvas_size[1]})")
 
 
 def main() -> None:
+    require_brand_assets()
     for filename, headline in HEADLINES:
         composite(
             raw_path=RAW_DIR / "iphone" / filename,

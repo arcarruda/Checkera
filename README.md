@@ -32,6 +32,19 @@ Then, in Xcode, select the **Checkera** target → **Signing & Capabilities** an
 | `Scripts/` | Asset-generation helpers (require external brand assets; not needed to build) |
 | `project.yml` | XcodeGen project definition |
 
+### Asset generation
+
+`Scripts/generate-app-icons.sh` works from the checked-in `Icon-1024.png` and
+needs nothing else. The two Python helpers regenerate assets from SVG masters
+that are **not** part of this repository; point them at a copy with:
+
+```bash
+CHECKERA_ASSETS=/path/to/bucket Scripts/generate-ios-assets.sh
+```
+
+They exit with an explanatory message if the directory is missing. None of this
+is needed to build or run the app.
+
 ## Running tests
 
 Use the `CheckeraTests` scheme in Xcode (**⌘U**), or:
