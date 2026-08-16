@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -137,7 +137,7 @@
 		38838FFBB25C7663FD8DA52E /* DailyTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTaskTests.swift; sourceTree = "<group>"; };
 		395CAAD4172B0B14A2EA1524 /* CheckeraWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CheckeraWidget.entitlements; sourceTree = "<group>"; };
 		3E6DC9DB5A7CBECAE041E531 /* TaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
-		463EF1008D25E703DDF5B44E /* Checkera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checkera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		463EF1008D25E703DDF5B44E /* Checkera.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Checkera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A38BDF6D38A1A6782AD14B3 /* TodayTimelineWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTimelineWidgetView.swift; sourceTree = "<group>"; };
 		4C7830A7E7660DACD79DB119 /* StubTaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubTaskRepository.swift; sourceTree = "<group>"; };
 		5241B737FFD29767BAB1CF35 /* FloatingAddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingAddButton.swift; sourceTree = "<group>"; };
@@ -153,13 +153,13 @@
 		6086D3488E9B4164B29007A1 /* StatusButtonGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusButtonGroup.swift; sourceTree = "<group>"; };
 		63868DF747AB5D7E3FB07B23 /* TaskRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepositoryTests.swift; sourceTree = "<group>"; };
 		67B5F0E8D2D1E17EB6177111 /* TaskRowCompact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRowCompact.swift; sourceTree = "<group>"; };
-		6EB7AEBD991B23546F84C92B /* CheckeraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheckeraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EB7AEBD991B23546F84C92B /* CheckeraTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CheckeraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		721E90B65883EEC0429DB82E /* TaskColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskColor.swift; sourceTree = "<group>"; };
 		763D30967E4FA65589CC5935 /* TaskColor+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskColor+Style.swift"; sourceTree = "<group>"; };
 		7897A50870E055DB57D12B08 /* ThemePreferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreferenceTests.swift; sourceTree = "<group>"; };
 		815A4FCFE2DAF88726212128 /* ScreenshotSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotSupport.swift; sourceTree = "<group>"; };
 		82224AA71B7049F7A79BBEAE /* TaskStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStatus.swift; sourceTree = "<group>"; };
-		84BBEDC5CF108719BC285689 /* CheckeraWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CheckeraWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		84BBEDC5CF108719BC285689 /* CheckeraWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CheckeraWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		856085D6F974EE9C8744480E /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		87501F5BF8D8FF465BAD8195 /* TaskSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSnapshot.swift; sourceTree = "<group>"; };
 		8F0ADE1F3FA62D42B78B9657 /* EmptyDayPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDayPlaceholder.swift; sourceTree = "<group>"; };
@@ -521,9 +521,11 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					0D59BE52320D49F87B1527C1 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					97E603EFA3879A4C137FA9CB = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -538,6 +540,7 @@
 			);
 			mainGroup = 09D67D40C629A14D6521D5FC;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -746,7 +749,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CheckeraWidget/CheckeraWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = N32WG93M87;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CheckeraWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -768,7 +771,7 @@
 				CODE_SIGN_ENTITLEMENTS = Checkera/Checkera.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = N32WG93M87;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Checkera/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -858,7 +861,7 @@
 				CODE_SIGN_ENTITLEMENTS = Checkera/Checkera.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = N32WG93M87;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Checkera/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -879,7 +882,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CheckeraWidget/CheckeraWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = N32WG93M87;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CheckeraWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -897,7 +900,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = N32WG93M87;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -915,7 +917,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = N32WG93M87;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

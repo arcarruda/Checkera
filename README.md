@@ -4,7 +4,7 @@ Checkera is a daily-task and timeline planner for iOS, built with **SwiftUI** an
 
 ## Requirements
 
-- Xcode 15 or newer
+- Xcode 16 or newer
 - iOS 17.0+ deployment target
 - Swift 5.10
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (the Xcode project is generated from `project.yml`)
