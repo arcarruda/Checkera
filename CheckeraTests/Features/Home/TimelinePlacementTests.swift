@@ -216,6 +216,12 @@ struct TimelinePlacementTests {
 
     // MARK: - drag hit-testing
 
+    @Test("drag delta follows vertical finger direction")
+    func dragDeltaDirection() {
+        #expect(TimelineDragController.Coordinator.canvasDelta(currentY: 140, beganY: 100) == 40)
+        #expect(TimelineDragController.Coordinator.canvasDelta(currentY: 60, beganY: 100) == -40)
+    }
+
     /// `frame(for:)` floors card height at 40pt while a minute is only 64/60 pt, so two
     /// back-to-back 15-minute tasks own 16pt slots but draw 40pt rects and genuinely overlap.
     /// Cards paint in `placedTasks` order at equal zIndex, so the LAST match is the visible one —

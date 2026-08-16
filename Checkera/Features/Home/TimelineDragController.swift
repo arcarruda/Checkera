@@ -93,10 +93,7 @@ struct TimelineDragController: UIViewRepresentable {
         private var isDragging = false
         private var displayLink: CADisplayLink?
         private var autoScrollSpeed: CGFloat = 0
-        /// Kept in *window* space so it stays valid while `contentOffset` moves underneath it.
-        private var lastWindowPoint: CGPoint = .zero
-        private var beganWindowY: CGFloat = 0
-        private var beganContentOffsetY: CGFloat = 0
+        private var beganCanvasY: CGFloat = 0
         private let logger = Logger(subsystem: "app.checkera", category: "Drag")
 
         init(_ view: TimelineDragController) {
@@ -183,29 +180,21 @@ struct TimelineDragController: UIViewRepresentable {
                 guard isEnabled, let anchor else { return }
                 let point = gesture.location(in: anchor)
                 guard let task = taskAt(point) else { return }
-                lastWindowPoint = gesture.location(in: nil)
-                beganWindowY = lastWindowPoint.y
-                beganContentOffsetY = scrollView?.contentOffset.y ?? 0
+                beganCanvasY = gesture.location(in: scrollView).y
                 isDragging = true
                 logger.debug("drag began on task at canvas y \(point.y, privacy: .public)")
                 onBegan(task)
 
             case .changed:
                 guard isDragging else { return }
-                lastWindowPoint = gesture.location(in: nil)
                 updateAutoScroll()
                 onChanged(currentDelta())
 
             case .ended:
                 guard isDragging else { return }
                 let delta = currentDelta()
-                // windowDelta and canvasDelta must share a sign and be near-equal when the content
-                // did not auto-scroll. A disagreement localises a direction bug to the
-                // window -> canvas conversion in one line.
-                let windowDelta = lastWindowPoint.y - beganWindowY
-                let scrollDelta = (scrollView?.contentOffset.y ?? beganContentOffsetY) - beganContentOffsetY
                 logger.debug(
-                    "drag ended: windowDelta=\(windowDelta, privacy: .public)pt scrollDelta=\(scrollDelta, privacy: .public)pt total=\(delta, privacy: .public)pt"
+                    "drag ended: canvasDelta=\(delta, privacy: .public)pt"
                 )
                 endDragSession()
                 onEnded(delta)
@@ -225,27 +214,18 @@ struct TimelineDragController: UIViewRepresentable {
 
         // MARK: - Coordinates
 
-        /// Vertical travel since pickup, in canvas points, built from two unambiguous quantities
-        /// and **no view-tree conversion**.
-        ///
-        /// - `windowDelta` grows positive as the finger moves down the screen; UIWindow
-        ///   coordinates cannot be rotated or flipped relative to the display.
-        /// - `scrollDelta` grows positive as the content scrolls up (revealing later times), which
-        ///   is exactly the extra canvas distance the card must cover. It is what makes
-        ///   drag-while-auto-scrolling work, and it cancels against the card's own screen
-        ///   position, so the card stays glued to the finger while the timeline moves beneath it.
-        ///
-        /// The previous formulation converted the window point into the anchor's coordinate space
-        /// and subtracted a `beganCanvasY` captured in that same space. That is correct only while
-        /// the anchor is alive and in a window: `anchor` is a `weak` reference to a SwiftUI-managed
-        /// view that can be recreated mid-drag, and the fallback returned a *window*-space value
-        /// while the baseline stayed *anchor*-space. Mixing the two produced a large bogus delta —
-        /// the card jumping the wrong way — with no compile error and nothing to see in a
-        /// simulator run where the anchor happens to survive.
+        /// Vertical travel since pickup in the scroll view's content coordinate space. UIKit and
+        /// SwiftUI both grow Y downward here, so dragging down produces the positive offset that
+        /// `DayTimelineView` applies to the card. Because a scroll view's bounds origin is its
+        /// content offset, querying the recognizer again during auto-scroll also includes the
+        /// canvas travel beneath a stationary finger.
         private func currentDelta() -> CGFloat {
-            let windowDelta = lastWindowPoint.y - beganWindowY
-            let scrollDelta = (scrollView?.contentOffset.y ?? beganContentOffsetY) - beganContentOffsetY
-            return windowDelta + scrollDelta
+            guard let recognizer, let scrollView else { return 0 }
+            return Self.canvasDelta(currentY: recognizer.location(in: scrollView).y, beganY: beganCanvasY)
+        }
+
+        static func canvasDelta(currentY: CGFloat, beganY: CGFloat) -> CGFloat {
+            currentY - beganY
         }
 
         // MARK: - Auto-scroll
@@ -256,15 +236,11 @@ struct TimelineDragController: UIViewRepresentable {
                 stopDisplayLink()
                 return
             }
-            // Position of the finger within the scroll view's *visible* rect.
-            //
-            // `convert(bounds, to: nil)` is the on-screen rect: `bounds.origin` is `contentOffset`,
-            // so converting it lands the visible top edge in window space. Converting `CGPoint.zero`
-            // instead would give the window position of content-y-0 — scrolled far off screen —
-            // making `viewportY` enormous, pinning the finger in the bottom band and running
-            // auto-scroll permanently. On a short viewport that swamps the drag entirely.
-            let visibleTopInWindow = scrollView.convert(scrollView.bounds, to: nil).minY
-            let viewportY = lastWindowPoint.y - visibleTopInWindow
+            // Both values use the scroll view's bounds coordinate space. Its visible top is
+            // `bounds.minY` (the content offset), so their difference remains the finger's stable
+            // on-screen position even while auto-scroll changes that offset.
+            let viewportY = recognizer?.location(in: scrollView).y ?? 0
+            let visibleTop = scrollView.bounds.minY
             let height = scrollView.bounds.height
             // Bands measure from the raw bounds edges: the bottom content margin is still
             // visible, touchable screen, so insetting the band would move the trigger zone up.
@@ -273,11 +249,11 @@ struct TimelineDragController: UIViewRepresentable {
             let band = min(TimelineDragController.autoScrollBand, height * 0.12)
             let maxSpeed = TimelineDragController.autoScrollMaxSpeed
 
-            if viewportY < band {
-                let t = min(1, max(0, (band - viewportY) / band))
+            if viewportY < visibleTop + band {
+                let t = min(1, max(0, (visibleTop + band - viewportY) / band))
                 autoScrollSpeed = -maxSpeed * t * t
-            } else if viewportY > height - band {
-                let t = min(1, max(0, (viewportY - (height - band)) / band))
+            } else if viewportY > visibleTop + height - band {
+                let t = min(1, max(0, (viewportY - (visibleTop + height - band)) / band))
                 autoScrollSpeed = maxSpeed * t * t
             } else {
                 autoScrollSpeed = 0
@@ -315,8 +291,8 @@ struct TimelineDragController: UIViewRepresentable {
             let target = min(max(scrollView.contentOffset.y + autoScrollSpeed * dt, minY), maxY)
             guard target != scrollView.contentOffset.y else { return }
             scrollView.contentOffset.y = target
-            // The finger hasn't moved, so no `.changed` will arrive — re-emit. `lastWindowPoint`
-            // is window space, so re-converting picks up the new offset.
+            // The finger hasn't moved, so no `.changed` will arrive. Re-querying the recognizer
+            // in scroll-view coordinates picks up the changed bounds origin.
             onChanged(currentDelta())
         }
 
