@@ -8,13 +8,17 @@ struct HomeView: View {
     let refreshTrigger: UUID
     let onEditTask: (UUID) -> Void
     let onCreateTaskAt: (Date) -> Void
+    let onAddTask: () -> Void
+    let onOpenSettings: () -> Void
 
     init(
         env: AppEnvironment,
         selectedDay: Binding<Day>,
         refreshTrigger: UUID,
         onEditTask: @escaping (UUID) -> Void,
-        onCreateTaskAt: @escaping (Date) -> Void
+        onCreateTaskAt: @escaping (Date) -> Void,
+        onAddTask: @escaping () -> Void,
+        onOpenSettings: @escaping () -> Void
     ) {
         _model = State(wrappedValue: HomeModel(
             clock: env.clock,
@@ -26,6 +30,8 @@ struct HomeView: View {
         self.refreshTrigger = refreshTrigger
         self.onEditTask = onEditTask
         self.onCreateTaskAt = onCreateTaskAt
+        self.onAddTask = onAddTask
+        self.onOpenSettings = onOpenSettings
     }
 
     var body: some View {
@@ -55,8 +61,27 @@ struct HomeView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
+        .overlay(alignment: .bottomTrailing) {
+            Group {
+                if selectedDay.allowsTaskCreation {
+                    FloatingAddButton(action: onAddTask)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .padding(.trailing, FloatingAddButton.margin)
+            .padding(.bottom, FloatingAddButton.margin)
+            .animation(.snappy(duration: 0.2), value: selectedDay.allowsTaskCreation)
+        }
         .navigationTitle(Text(selectedDay.title))
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: onOpenSettings) {
+                    Image(systemName: "gearshape")
+                }
+                .accessibilityLabel(Text(String(localized: "Settings", comment: "Accessibility label for the toolbar button that opens the settings screen")))
+            }
+        }
         .task(id: refreshTrigger) {
             await model.loadAllDays()
         }
@@ -83,14 +108,14 @@ struct HomeView: View {
 #Preview("Loaded") {
     @Previewable @State var day: Day = .today
     NavigationStack {
-        HomeView(env: AppEnvironment.preview(), selectedDay: $day, refreshTrigger: UUID(), onEditTask: { _ in }, onCreateTaskAt: { _ in })
+        HomeView(env: AppEnvironment.preview(), selectedDay: $day, refreshTrigger: UUID(), onEditTask: { _ in }, onCreateTaskAt: { _ in }, onAddTask: {}, onOpenSettings: {})
     }
 }
 
-#Preview("Empty + suggestions") {
+#Preview("Empty") {
     @Previewable @State var day: Day = .today
     NavigationStack {
-        HomeView(env: AppEnvironment.preview(seed: []), selectedDay: $day, refreshTrigger: UUID(), onEditTask: { _ in }, onCreateTaskAt: { _ in })
+        HomeView(env: AppEnvironment.preview(seed: []), selectedDay: $day, refreshTrigger: UUID(), onEditTask: { _ in }, onCreateTaskAt: { _ in }, onAddTask: {}, onOpenSettings: {})
     }
 }
 #endif

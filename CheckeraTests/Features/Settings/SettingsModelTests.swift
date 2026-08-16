@@ -15,16 +15,17 @@ struct SettingsModelTests {
 
     // MARK: - Defaults
 
-    @Test("default regular tone is regularDefault")
-    func defaultRegular() {
+    @Test("every color defaults to its own default tone", arguments: TaskColor.allCases)
+    func defaultTonePerColor(_ color: TaskColor) {
         let model = SettingsModel(defaults: makeDefaults())
-        #expect(model.regularTone == .regularDefault)
+        #expect(model.tone(for: color) == color.defaultTone)
     }
 
-    @Test("default golden tone is goldenBell")
-    func defaultGolden() {
+    @Test("gold defaults to goldenBell, other colors to regularDefault")
+    func defaultTonesByCategory() {
         let model = SettingsModel(defaults: makeDefaults())
-        #expect(model.goldenTone == .goldenBell)
+        #expect(model.tone(for: .gold) == .goldenBell)
+        #expect(model.tone(for: .blue) == .regularDefault)
     }
 
     @Test("default theme preference is system")
@@ -35,36 +36,90 @@ struct SettingsModelTests {
 
     // MARK: - Persistence
 
-    @Test("setting regular tone persists to defaults")
-    func setRegularPersists() {
+    @Test("setting a color's tone persists under that color's own key")
+    func setTonePersists() {
         let defaults = makeDefaults()
         let model = SettingsModel(defaults: defaults)
 
-        model.regularTone = .regularChime
+        model.setTone(.regularChime, for: .teal)
 
-        #expect(defaults.string(forKey: "regularTone") == NotificationTone.regularChime.rawValue)
+        #expect(defaults.string(forKey: "tone.teal") == NotificationTone.regularChime.rawValue)
+        #expect(model.tone(for: .teal) == .regularChime)
+        // Sibling colours are untouched.
+        #expect(model.tone(for: .blue) == .regularDefault)
     }
 
-    @Test("setting golden tone persists to defaults")
-    func setGoldenPersists() {
+    @Test("model loads existing per-color tones from defaults")
+    func loadsExistingPerColor() {
         let defaults = makeDefaults()
+        defaults.set(NotificationTone.regularSubtle.rawValue, forKey: "tone.purple")
+        defaults.set(NotificationTone.goldenChime.rawValue, forKey: "tone.gold")
+
         let model = SettingsModel(defaults: defaults)
 
-        model.goldenTone = .goldenFanfare
-
-        #expect(defaults.string(forKey: "goldenTone") == NotificationTone.goldenFanfare.rawValue)
+        #expect(model.tone(for: .purple) == .regularSubtle)
+        #expect(model.tone(for: .gold) == .goldenChime)
     }
 
-    @Test("model loads existing values from defaults")
-    func loadsExisting() {
+    // MARK: - Upgrading from the pre-palette keys
+
+    @Test("pre-palette goldenTone still applies to gold")
+    func legacyGoldenKeyInherited() {
+        let defaults = makeDefaults()
+        defaults.set(NotificationTone.goldenFanfare.rawValue, forKey: "goldenTone")
+
+        let model = SettingsModel(defaults: defaults)
+
+        #expect(model.tone(for: .gold) == .goldenFanfare)
+    }
+
+    @Test("pre-palette regularTone still applies to every non-gold color")
+    func legacyRegularKeyInherited() {
         let defaults = makeDefaults()
         defaults.set(NotificationTone.regularSubtle.rawValue, forKey: "regularTone")
-        defaults.set(NotificationTone.goldenChime.rawValue, forKey: "goldenTone")
 
         let model = SettingsModel(defaults: defaults)
 
-        #expect(model.regularTone == .regularSubtle)
-        #expect(model.goldenTone == .goldenChime)
+        for color in TaskColor.allCases where !color.isAlarm {
+            #expect(model.tone(for: color) == .regularSubtle)
+        }
+        #expect(model.tone(for: .gold) == .goldenBell)
+    }
+
+    @Test("a per-color key wins over the pre-palette key")
+    func perColorKeyWins() {
+        let defaults = makeDefaults()
+        defaults.set(NotificationTone.regularSubtle.rawValue, forKey: "regularTone")
+        defaults.set(NotificationTone.regularChime.rawValue, forKey: "tone.pink")
+
+        let model = SettingsModel(defaults: defaults)
+
+        #expect(model.tone(for: .pink) == .regularChime)
+        #expect(model.tone(for: .blue) == .regularSubtle)
+    }
+
+    // MARK: - Category guard
+
+    @Test("a stored tone from the wrong category falls back to the color's default")
+    func mismatchedCategoryIsRejected() {
+        let defaults = makeDefaults()
+        defaults.set(NotificationTone.goldenBell.rawValue, forKey: "tone.teal")
+        defaults.set(NotificationTone.regularChime.rawValue, forKey: "tone.gold")
+
+        let model = SettingsModel(defaults: defaults)
+
+        #expect(model.tone(for: .teal) == .regularDefault)
+        #expect(model.tone(for: .gold) == .goldenBell)
+    }
+
+    @Test("setTone refuses a tone from the wrong category")
+    func setToneRejectsMismatch() {
+        let defaults = makeDefaults()
+        let model = SettingsModel(defaults: defaults)
+
+        model.setTone(.goldenFanfare, for: .red)
+
+        #expect(model.tone(for: .red) == .regularDefault)
     }
 
     @Test("setting theme preference persists to defaults")
@@ -89,20 +144,24 @@ struct SettingsModelTests {
 
     // MARK: - tone(for:)
 
-    @Test("tone(for: .regular) returns the regular tone")
-    func toneForRegular() {
+    @Test("tone(for:) returns what was set for that color")
+    func toneForColor() {
         let model = SettingsModel(defaults: makeDefaults())
-        model.regularTone = .regularSubtle
 
-        #expect(model.tone(for: .regular) == .regularSubtle)
+        model.setTone(.regularSubtle, for: .purple)
+        model.setTone(.goldenFanfare, for: .gold)
+
+        #expect(model.tone(for: .purple) == .regularSubtle)
+        #expect(model.tone(for: .gold) == .goldenFanfare)
     }
 
-    @Test("tone(for: .golden) returns the golden tone")
-    func toneForGolden() {
+    @Test("toneBinding writes through to the model")
+    func toneBindingWrites() {
         let model = SettingsModel(defaults: makeDefaults())
-        model.goldenTone = .goldenFanfare
 
-        #expect(model.tone(for: .golden) == .goldenFanfare)
+        model.toneBinding(for: .pink).wrappedValue = .regularChime
+
+        #expect(model.tone(for: .pink) == .regularChime)
     }
 
     // MARK: - Sleep window — defaults

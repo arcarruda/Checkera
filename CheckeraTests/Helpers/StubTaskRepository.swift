@@ -8,8 +8,6 @@ final class StubTaskRepository: TaskRepository {
     var insertedTasks: [DailyTask] = []
     var updatedTasks: [DailyTask] = []
     var deletedTasks: [DailyTask] = []
-    var copyCalls: [(from: Date, to: Date)] = []
-    var latestPastNonEmptyDayResult: Date?
     var shouldThrow = false
 
     enum StubError: Error { case fail }
@@ -39,16 +37,5 @@ final class StubTaskRepository: TaskRepository {
     func task(id: UUID) throws -> DailyTask? {
         if shouldThrow { throw StubError.fail }
         return tasksByDate.values.flatMap { $0 }.first { $0.id == id }
-    }
-
-    func copyTasks(from sourceDay: Date, to targetDay: Date) throws -> [DailyTask] {
-        if shouldThrow { throw StubError.fail }
-        copyCalls.append((sourceDay, targetDay))
-        return []
-    }
-
-    func mostRecentNonEmptyDay(strictlyBefore reference: Date) throws -> Date? {
-        if shouldThrow { throw StubError.fail }
-        return latestPastNonEmptyDayResult
     }
 }

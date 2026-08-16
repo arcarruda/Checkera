@@ -13,9 +13,10 @@ struct DailyTaskTests {
         #expect(task.status == .pending)
     }
 
-    @Test("default type is regular")
-    func defaultTypeIsRegular() {
+    @Test("default color is the fallback and implies a regular type")
+    func defaultColorIsFallback() {
         let task = DailyTask(title: "x", startDate: .now)
+        #expect(task.color == .fallback)
         #expect(task.type == .regular)
     }
 
@@ -27,11 +28,49 @@ struct DailyTaskTests {
 
     // MARK: - Enum round-trip
 
-    @Test("type round-trips via rawValue", arguments: TaskType.allCases)
-    func typeRoundTrip(_ value: TaskType) {
-        let task = DailyTask(title: "x", startDate: .now, type: value)
-        #expect(task.type == value)
-        #expect(TaskType(rawValue: task.typeRaw) == value)
+    @Test("color round-trips via rawValue", arguments: TaskColor.allCases)
+    func colorRoundTrip(_ value: TaskColor) {
+        let task = DailyTask(title: "x", startDate: .now, color: value)
+        #expect(task.color == value)
+        #expect(TaskColor(rawValue: task.colorRaw ?? "") == value)
+    }
+
+    @Test("type is derived from color", arguments: TaskColor.allCases)
+    func typeDerivedFromColor(_ value: TaskColor) {
+        let task = DailyTask(title: "x", startDate: .now, color: value)
+        #expect(task.type == (value == .gold ? .golden : .regular))
+        #expect(task.typeRaw == task.type.rawValue)
+    }
+
+    // MARK: - Legacy tasks (saved before the palette shipped)
+
+    @Test("a golden task with no stored color reads back as gold")
+    func legacyGoldenDerivesGold() {
+        let task = DailyTask(title: "x", startDate: .now)
+        task.colorRaw = nil
+        task.typeRaw = TaskType.golden.rawValue
+
+        #expect(task.color == .gold)
+        #expect(task.type == .golden)
+    }
+
+    @Test("a regular task with no stored color reads back as the fallback")
+    func legacyRegularDerivesFallback() {
+        let task = DailyTask(title: "x", startDate: .now)
+        task.colorRaw = nil
+        task.typeRaw = TaskType.regular.rawValue
+
+        #expect(task.color == .fallback)
+        #expect(task.type == .regular)
+    }
+
+    @Test("an unrecognised stored color falls back via the legacy type")
+    func unknownColorFallsBack() {
+        let task = DailyTask(title: "x", startDate: .now)
+        task.colorRaw = "chartreuse"
+        task.typeRaw = TaskType.golden.rawValue
+
+        #expect(task.color == .gold)
     }
 
     @Test("status round-trips via rawValue", arguments: TaskStatus.allCases)
@@ -50,11 +89,17 @@ struct DailyTaskTests {
         #expect(task.statusRaw == TaskStatus.accomplished.rawValue)
     }
 
-    @Test("setting type updates raw value")
-    func setTypeUpdatesRaw() {
+    @Test("setting color updates both raw values")
+    func setColorUpdatesRaws() {
         let task = DailyTask(title: "x", startDate: .now)
-        task.type = .golden
+
+        task.color = .gold
+        #expect(task.colorRaw == TaskColor.gold.rawValue)
         #expect(task.typeRaw == TaskType.golden.rawValue)
+
+        task.color = .purple
+        #expect(task.colorRaw == TaskColor.purple.rawValue)
+        #expect(task.typeRaw == TaskType.regular.rawValue)
     }
 
     // MARK: - End-time derivation

@@ -128,10 +128,7 @@ struct SlideToDeleteButton: View {
     }
 
     private func snapBack() {
-        let animation: Animation = reduceMotion
-            ? .linear(duration: 0.15)
-            : .spring(response: 0.3, dampingFraction: 0.85)
-        withAnimation(animation) {
+        withAnimation(.checkeraSnap(reduceMotion: reduceMotion)) {
             dragOffset = 0
         }
         didCrossThreshold = false

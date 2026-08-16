@@ -4,12 +4,8 @@ struct GoldenBadge: View {
     var body: some View {
         Image(systemName: "star.fill")
             .font(.caption.weight(.semibold))
-            .foregroundStyle(LinearGradient(
-                colors: [.yellow, .orange],
-                startPoint: .top,
-                endPoint: .bottom
-            ))
-            .accessibilityLabel(Text(String(localized: "Golden task", comment: "Accessibility label for the golden task badge")))
+            .foregroundStyle(TaskColor.gold.fill)
+            .accessibilityLabel(Text(String(localized: "Alarm task", comment: "Accessibility label for the badge marking a gold task that alarms")))
     }
 }
 

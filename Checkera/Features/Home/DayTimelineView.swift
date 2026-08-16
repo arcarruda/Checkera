@@ -9,13 +9,46 @@ struct DayTimelineView: View {
     let onDeleteTask: (DailyTask) -> Void
 
     @State private var openTaskID: UUID?
-    @Environment(\.appTabBarHeight) private var tabBarHeight
+    @State private var dragTask: DailyTask?
+    @State private var dragBaselineMinute = 0
+    /// Raw, continuous offset in canvas points — the card tracks the finger 1:1. Snapping applies
+    /// to the time label, the haptic ticks, and the drop, never to the card position mid-drag.
+    /// Updating this at event rate re-evaluates `body`, but diffing means only the dragged row's
+    /// offset actually changes per frame; the other rows compare equal.
+    @State private var dragOffsetPoints: CGFloat = 0
+    /// Snapped delta in minutes, driving the live label and the per-step haptic latch.
+    @State private var dragSnappedDelta = 0
+    @State private var snapTick = 0
+    @State private var dropTick = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         GeometryReader { proxy in
             ScrollViewReader { scrollProxy in
                 ScrollView {
                     ZStack(alignment: .topLeading) {
+                        TimelineDragController(
+                            isEnabled: day.allowsTaskCreation,
+                            taskAt: { point in
+                                // Resolve in REVERSE paint order. Cards are emitted by
+                                // `ForEach(placedTasks)` at equal zIndex, so the *last* match is
+                                // the one actually on top — and `frame(for:)` floors card height
+                                // at 40pt, so back-to-back short tasks genuinely overlap (two
+                                // 15-minute tasks own 16pt slots but draw 40pt rects). Using
+                                // `.first` here lifted the earlier, visually-covered card while
+                                // tap and swipe-to-delete hit the later one.
+                                let hits = placedTasks.filter {
+                                    model.frame(for: $0, availableWidth: proxy.size.width).contains(point)
+                                }
+                                // A swiped-open row draws at zIndex 2, above every zIndex-1 row
+                                // regardless of its position in the array.
+                                return (hits.last { $0.task.id == openTaskID } ?? hits.last)?.task
+                            },
+                            onBegan: beginDrag,
+                            onChanged: updateDrag,
+                            onEnded: endDrag,
+                            onCancelled: cancelDrag
+                        )
                         sleepIndicators
                         backbone
                         ForEach(placedTasks) { placed in
@@ -32,8 +65,13 @@ struct DayTimelineView: View {
                     .frame(width: proxy.size.width, height: HomeModel.hourHeight * 24, alignment: .topLeading)
                 }
                 .contentMargins(.top, 8, for: .scrollContent)
-                .contentMargins(.bottom, tabBarHeight, for: .scrollContent)
+                .contentMargins(.bottom, FloatingAddButton.scrollClearance, for: .scrollContent)
                 .onAppear { scrollToInitialHour(scrollProxy) }
+                .sensoryFeedback(.selection, trigger: snapTick)
+                .sensoryFeedback(.success, trigger: dropTick)
+                .sensoryFeedback(trigger: dragTask?.id) { _, new in
+                    new == nil ? nil : .impact(weight: .medium)
+                }
             }
         }
     }
@@ -114,14 +152,12 @@ struct DayTimelineView: View {
     @ViewBuilder
     private func taskView(for placed: PlacedTask, availableWidth: CGFloat) -> some View {
         let task = placed.task
-        let yOffset = model.yOffset(for: task.startDate)
-        let height = max(40, CGFloat(task.durationMinutes) * (HomeModel.hourHeight / 60) - 4)
+        let frame = model.frame(for: placed, availableWidth: availableWidth)
 
-        let usableWidth = max(0, availableWidth - HomeModel.leadingGutter - 16)
-        let columnWidth = usableWidth / CGFloat(max(placed.columnCount, 1))
-        let xBase = HomeModel.leadingGutter + 8
-        let xColumn = columnWidth * CGFloat(placed.column)
-        let rowWidth = max(0, columnWidth - 4)
+        let isDragging = dragTask?.id == task.id
+        let displayStart: Date? = isDragging && dragSnappedDelta != 0
+            ? Calendar.current.date(byAdding: .minute, value: dragSnappedDelta, to: task.startDate)
+            : nil
 
         Group {
             if day.allowsTaskCreation {
@@ -129,25 +165,98 @@ struct DayTimelineView: View {
                     taskID: task.id,
                     openTaskID: $openTaskID,
                     onDelete: { onDeleteTask(task) },
-                    onTap: { onSelectTask(task) }
+                    onTap: { onSelectTask(task) },
+                    onNudge: { nudge(task, byMinutes: $0) }
                 ) {
-                    TaskRowCompact(task: task)
-                        .frame(width: rowWidth, height: height)
+                    TaskRowCompact(task: task, displayStart: displayStart)
+                        .frame(width: frame.width, height: frame.height)
                 }
-                .frame(width: rowWidth, height: height)
+                .frame(width: frame.width, height: frame.height)
             } else {
                 Button {
                     onSelectTask(task)
                 } label: {
                     TaskRowCompact(task: task)
-                        .frame(width: rowWidth, height: height)
+                        .frame(width: frame.width, height: frame.height)
                 }
                 .buttonStyle(.plain)
                 .accessibilityHint(Text(String(localized: "Show task details", comment: "Accessibility hint on a compact task row that opens the task detail sheet")))
             }
         }
-        .offset(x: xBase + xColumn, y: yOffset)
-        .zIndex(openTaskID == task.id ? 2 : 1)
+        // Lift styling sits outside `SwipeableTaskRow`, whose `.clipped()` would crop the shadow.
+        .scaleEffect(isDragging ? 1.03 : 1)
+        .shadow(color: .black.opacity(isDragging ? 0.22 : 0), radius: 10, y: 4)
+        // No implicit animation on the offset: the card must stick to the finger. Lift and drop
+        // are animated explicitly in beginDrag/endDrag.
+        .offset(x: frame.minX, y: frame.minY + (isDragging ? dragOffsetPoints : 0))
+        .zIndex(isDragging ? 20 : (openTaskID == task.id ? 2 : 1))
+    }
+
+    // MARK: - Drag to reschedule
+
+    private func beginDrag(_ task: DailyTask) {
+        dragBaselineMinute = HomeModel.minuteOfDay(task.startDate)
+        dragOffsetPoints = 0
+        dragSnappedDelta = 0
+        withAnimation(.checkeraDragStep(reduceMotion: reduceMotion)) {
+            openTaskID = nil
+            dragTask = task
+        }
+    }
+
+    private func updateDrag(deltaPoints: CGFloat) {
+        guard let task = dragTask else { return }
+        dragOffsetPoints = HomeModel.clampedDragOffset(
+            deltaPoints,
+            baselineMinute: dragBaselineMinute,
+            durationMinutes: task.durationMinutes
+        )
+        let target = HomeModel.dropMinute(
+            baselineMinute: dragBaselineMinute,
+            deltaPoints: dragOffsetPoints,
+            durationMinutes: task.durationMinutes
+        )
+        let snapped = target - dragBaselineMinute
+        if snapped != dragSnappedDelta {
+            dragSnappedDelta = snapped
+            snapTick += 1
+        }
+    }
+
+    private func endDrag(deltaPoints: CGFloat) {
+        guard let task = dragTask else { return }
+        updateDrag(deltaPoints: deltaPoints)
+        let target = dragBaselineMinute + dragSnappedDelta
+        let moved = dragSnappedDelta != 0
+        // `moveTask` is synchronous, so the write and the offset reset land in one transaction —
+        // the card settles from under the finger straight into its snapped slot.
+        withAnimation(.checkeraSnap(reduceMotion: reduceMotion)) {
+            model.moveTask(task, toMinuteOfDay: target, on: day)
+            dragTask = nil
+            dragOffsetPoints = 0
+            dragSnappedDelta = 0
+        }
+        // Dragging back to the original slot is a cancel, not a commit — no success haptic.
+        if moved { dropTick += 1 }
+    }
+
+    private func cancelDrag() {
+        withAnimation(.checkeraSnap(reduceMotion: reduceMotion)) {
+            dragTask = nil
+            dragOffsetPoints = 0
+            dragSnappedDelta = 0
+        }
+    }
+
+    private func nudge(_ task: DailyTask, byMinutes minutes: Int) {
+        let target = HomeModel.dropMinute(
+            baselineMinute: HomeModel.minuteOfDay(task.startDate),
+            deltaPoints: CGFloat(minutes) * HomeModel.pointsPerMinute,
+            durationMinutes: task.durationMinutes
+        )
+        withAnimation(.checkeraSnap(reduceMotion: reduceMotion)) {
+            _ = model.moveTask(task, toMinuteOfDay: target, on: day)
+        }
     }
 
     private func scrollToInitialHour(_ proxy: ScrollViewProxy) {

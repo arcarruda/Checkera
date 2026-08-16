@@ -45,13 +45,15 @@ struct NotificationService {
         )
         let start = task.startDate.formatted(.dateTime.hour().minute())
         let end = task.endDate.formatted(.dateTime.hour().minute())
+        // Alarm behaviour comes from the task's colour, not from the tone: now that every colour
+        // has its own tone, deriving it from the tone would let a stale teal/goldenChime pairing
+        // hand a plain reminder the time-sensitive alarm category.
         let categoryID: String
         let interruptionLevel: UNNotificationInterruptionLevel
-        switch tone.category {
-        case .golden:
+        if task.color.isAlarm {
             categoryID = NotificationCategoryID.goldenAlarm
             interruptionLevel = .timeSensitive
-        case .regular:
+        } else {
             categoryID = NotificationCategoryID.regular
             interruptionLevel = .active
         }

@@ -51,9 +51,10 @@ struct TaskDetailSheet: View {
                 Text(timeRange)
                     .font(.subheadline.monospacedDigit())
                     .foregroundStyle(.secondary)
+                TaskColorPill(color: task.color)
             }
             Spacer(minLength: 0)
-            if task.type == .golden {
+            if task.color.isAlarm {
                 GoldenBadge()
                     .font(.title3)
             }
@@ -75,7 +76,7 @@ struct TaskDetailSheet: View {
                 details: "Daily sync with the iOS guild.",
                 startDate: .now,
                 durationMinutes: 30,
-                type: .regular
+                color: .blue
             ),
             canEdit: true,
             onEditTask: {}
@@ -93,7 +94,7 @@ struct TaskDetailSheet: View {
                 details: String(repeating: "Walk through the new persistence layer, focus on the migration story, and capture follow-ups for the next sprint. ", count: 12),
                 startDate: .now,
                 durationMinutes: 90,
-                type: .regular
+                color: .blue
             ),
             canEdit: true,
             onEditTask: {}
@@ -111,7 +112,7 @@ struct TaskDetailSheet: View {
                 details: "Focus on the timeline view layout.",
                 startDate: .now,
                 durationMinutes: 120,
-                type: .golden,
+                color: .gold,
                 status: .accomplished
             ),
             canEdit: true,
@@ -130,7 +131,7 @@ struct TaskDetailSheet: View {
                 details: "",
                 startDate: .now,
                 durationMinutes: 15,
-                type: .regular
+                color: .blue
             ),
             canEdit: true,
             onEditTask: {}
@@ -148,7 +149,7 @@ struct TaskDetailSheet: View {
                 details: "Completed yesterday.",
                 startDate: .now.addingTimeInterval(-60 * 60 * 24),
                 durationMinutes: 60,
-                type: .regular,
+                color: .blue,
                 status: .accomplished
             ),
             canEdit: false,

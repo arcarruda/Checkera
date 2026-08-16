@@ -12,7 +12,13 @@ final class DailyTask {
     var startDate: Date
     var durationMinutes: Int
     var endTimeWasManuallyEdited: Bool
+    /// Legacy regular/golden flag. Still written on every save so a downgrade to a build
+    /// without the palette keeps golden tasks golden, and so tasks created before the
+    /// palette can derive a colour. Never written directly — `color`'s setter owns it.
     var typeRaw: String
+    /// Optional so the shipped store lightweight-migrates. `nil` means "saved before the
+    /// palette existed" and is resolved from `typeRaw` — see `color`.
+    var colorRaw: String?
     var statusRaw: String
     var createdAt: Date
     var updatedAt: Date
@@ -26,7 +32,7 @@ final class DailyTask {
         startDate: Date,
         durationMinutes: Int = 30,
         endTimeWasManuallyEdited: Bool = false,
-        type: TaskType = .regular,
+        color: TaskColor = .fallback,
         status: TaskStatus = .pending,
         createdAt: Date = .now,
         updatedAt: Date = .now
@@ -37,7 +43,8 @@ final class DailyTask {
         self.startDate = startDate
         self.durationMinutes = durationMinutes
         self.endTimeWasManuallyEdited = endTimeWasManuallyEdited
-        self.typeRaw = type.rawValue
+        self.colorRaw = color.rawValue
+        self.typeRaw = color.alarmType.rawValue
         self.statusRaw = status.rawValue
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -47,10 +54,25 @@ final class DailyTask {
 // MARK: - Computed accessors
 
 extension DailyTask {
-    var type: TaskType {
-        get { TaskType(rawValue: typeRaw) ?? .regular }
-        set { typeRaw = newValue.rawValue }
+    /// The task's colour, and the only writable half of the colour/type pair.
+    ///
+    /// Tasks saved before the palette shipped have `colorRaw == nil` and fall back to a colour
+    /// derived from `typeRaw`, so golden tasks stay gold and everything else becomes blue —
+    /// no backfill needed. Setting it keeps `typeRaw` in step.
+    var color: TaskColor {
+        get {
+            if let raw = colorRaw, let known = TaskColor(rawValue: raw) { return known }
+            return TaskColor.legacyDefault(forTypeRaw: typeRaw)
+        }
+        set {
+            colorRaw = newValue.rawValue
+            typeRaw = newValue.alarmType.rawValue
+        }
     }
+
+    /// Derived from `color`, deliberately get-only: two writable properties over one concept
+    /// would silently drift (a purple task that still fires the alarm category).
+    var type: TaskType { color.alarmType }
 
     var status: TaskStatus {
         get { TaskStatus(rawValue: statusRaw) ?? .pending }
@@ -73,23 +95,23 @@ extension DailyTask {
             cal.date(bySettingHour: hour, minute: minute, second: 0, of: today) ?? today
         }
         return [
-            DailyTask(title: "Morning workout", startDate: at(7), durationMinutes: 60, type: .regular),
+            DailyTask(title: "Morning workout", startDate: at(7), durationMinutes: 60, color: .teal),
             DailyTask(
                 title: "Team standup",
                 details: "Daily sync with the iOS guild.",
                 startDate: at(9, 30),
                 durationMinutes: 30,
-                type: .regular
+                color: .blue
             ),
             DailyTask(
                 title: "Deep work block",
                 details: "Focus on the timeline view layout.",
                 startDate: at(10, 15),
                 durationMinutes: 120,
-                type: .golden
+                color: .gold
             ),
-            DailyTask(title: "Lunch with Ana", startDate: at(13), durationMinutes: 60, type: .regular),
-            DailyTask(title: "Evening read", startDate: at(21), durationMinutes: 30, type: .golden),
+            DailyTask(title: "Lunch with Ana", startDate: at(13), durationMinutes: 60, color: .pink),
+            DailyTask(title: "Evening read", startDate: at(21), durationMinutes: 30, color: .purple),
         ]
     }
 }

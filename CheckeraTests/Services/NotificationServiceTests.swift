@@ -210,7 +210,7 @@ struct NotificationServiceTests {
         let service = NotificationService(adapter: stub)
         let target = date()
         let now = target.addingTimeInterval(-3600)
-        let task = DailyTask(title: "Deep work", startDate: target, type: .golden)
+        let task = DailyTask(title: "Deep work", startDate: target, color: .gold)
 
         await service.schedule(task, tone: .goldenBell, now: now)
 
@@ -224,11 +224,54 @@ struct NotificationServiceTests {
         let service = NotificationService(adapter: stub)
         let target = date()
         let now = target.addingTimeInterval(-3600)
-        let task = DailyTask(title: "Run", startDate: target, type: .regular)
+        let task = DailyTask(title: "Run", startDate: target, color: .blue)
 
         await service.schedule(task, tone: .regularDefault, now: now)
 
         #expect(stub.scheduledRequests.first?.categoryIdentifier == NotificationCategoryID.regular)
         #expect(stub.scheduledRequests.first?.interruptionLevel == .active)
+    }
+
+    @Test("the alarm category follows the task's color, not the tone it was handed")
+    func categoryFollowsColorNotTone() async {
+        let stub = StubNotificationCenter()
+        let service = NotificationService(adapter: stub)
+        let target = date()
+        let now = target.addingTimeInterval(-3600)
+        let teal = DailyTask(title: "Stretch", startDate: target, color: .teal)
+
+        // A golden-category tone must not promote a non-alarm colour to the alarm category.
+        await service.schedule(teal, tone: .goldenBell, now: now)
+
+        #expect(stub.scheduledRequests.first?.categoryIdentifier == NotificationCategoryID.regular)
+        #expect(stub.scheduledRequests.first?.interruptionLevel == .active)
+    }
+
+    @Test("a gold task alarms even when handed a regular tone")
+    func goldAlarmsRegardlessOfTone() async {
+        let stub = StubNotificationCenter()
+        let service = NotificationService(adapter: stub)
+        let target = date()
+        let now = target.addingTimeInterval(-3600)
+        let gold = DailyTask(title: "Ship it", startDate: target, color: .gold)
+
+        await service.schedule(gold, tone: .regularDefault, now: now)
+
+        #expect(stub.scheduledRequests.first?.categoryIdentifier == NotificationCategoryID.goldenAlarm)
+        #expect(stub.scheduledRequests.first?.interruptionLevel == .timeSensitive)
+    }
+
+    @Test("every task color schedules the category its isAlarm flag implies", arguments: TaskColor.allCases)
+    func categoryPerColor(_ color: TaskColor) async {
+        let stub = StubNotificationCenter()
+        let service = NotificationService(adapter: stub)
+        let target = date()
+        let now = target.addingTimeInterval(-3600)
+        let task = DailyTask(title: "x", startDate: target, color: color)
+
+        await service.schedule(task, tone: color.defaultTone, now: now)
+
+        let expected = color.isAlarm ? NotificationCategoryID.goldenAlarm : NotificationCategoryID.regular
+        #expect(stub.scheduledRequests.first?.categoryIdentifier == expected)
     }
 }

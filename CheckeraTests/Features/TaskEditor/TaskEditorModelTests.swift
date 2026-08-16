@@ -96,10 +96,10 @@ struct TaskEditorModelTests {
         #expect(model.durationMinutes == 30)
     }
 
-    @Test("add mode default type is regular")
-    func addDefaultType() {
+    @Test("add mode default color is the fallback")
+    func addDefaultColor() {
         let model = makeModel()
-        #expect(model.type == .regular)
+        #expect(model.color == .fallback)
     }
 
     @Test("add mode isEditing is false")
@@ -118,7 +118,7 @@ struct TaskEditorModelTests {
             details: "notes",
             startDate: date(hour: 14),
             durationMinutes: 60,
-            type: .golden
+            color: .gold
         )
         let day = Calendar.current.startOfDay(for: task.startDate)
         repo.tasksByDate[day] = [task]
@@ -129,7 +129,7 @@ struct TaskEditorModelTests {
         #expect(model.details == "notes")
         #expect(model.startDate == task.startDate)
         #expect(model.durationMinutes == 60)
-        #expect(model.type == .golden)
+        #expect(model.color == .gold)
     }
 
     @Test("edit mode isEditing is true")

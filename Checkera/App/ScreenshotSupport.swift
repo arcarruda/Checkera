@@ -58,14 +58,14 @@ enum ScreenshotSeed {
                 title: "Morning run",
                 startDate: at(6, 30),
                 durationMinutes: 30,
-                type: .regular,
+                color: .teal,
                 status: .accomplished
             ),
             DailyTask(
                 title: "Cold shower & coffee",
                 startDate: at(7, 15),
                 durationMinutes: 30,
-                type: .regular,
+                color: .blue,
                 status: .accomplished
             ),
             DailyTask(
@@ -73,7 +73,7 @@ enum ScreenshotSeed {
                 details: "Daily sync with the iOS guild.",
                 startDate: at(9, 30),
                 durationMinutes: 30,
-                type: .regular,
+                color: .purple,
                 status: .accomplished
             ),
             DailyTask(
@@ -81,14 +81,14 @@ enum ScreenshotSeed {
                 details: "Map out the next quarter's roadmap.",
                 startDate: at(10, 15),
                 durationMinutes: 90,
-                type: .golden,
+                color: .gold,
                 status: .accomplished
             ),
             DailyTask(
                 title: "Lunch with Marina",
                 startDate: at(13, 0),
                 durationMinutes: 60,
-                type: .regular,
+                color: .pink,
                 status: .pending
             ),
             DailyTask(
@@ -97,14 +97,14 @@ enum ScreenshotSeed {
                 details: "Renan from Linha 14. Prep follow-up questions.",
                 startDate: at(14, 30),
                 durationMinutes: 45,
-                type: .golden,
+                color: .gold,
                 status: .pending
             ),
             DailyTask(
                 title: "Evening walk",
                 startDate: at(18, 30),
                 durationMinutes: 30,
-                type: .regular,
+                color: .red,
                 status: .pending
             ),
             DailyTask(
@@ -112,7 +112,7 @@ enum ScreenshotSeed {
                 details: "Continue Project Hail Mary.",
                 startDate: at(21, 0),
                 durationMinutes: 30,
-                type: .golden,
+                color: .gold,
                 status: .pending
             ),
         ]

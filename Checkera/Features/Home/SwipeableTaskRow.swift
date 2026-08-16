@@ -9,6 +9,7 @@ struct SwipeableTaskRow<Content: View>: View {
     @Binding var openTaskID: UUID?
     let onDelete: () -> Void
     let onTap: () -> Void
+    let onNudge: (Int) -> Void
     @ViewBuilder let content: () -> Content
 
     // MARK: - State
@@ -47,13 +48,21 @@ struct SwipeableTaskRow<Content: View>: View {
                 .accessibilityAction(named: Text(String(localized: "Delete", comment: "VoiceOver action name to delete a task from the timeline"))) {
                     onDelete()
                 }
+                // VoiceOver captures long presses, so drag-to-reschedule is unreachable there.
+                // These are the equivalent, in the same shape as the Delete action above.
+                .accessibilityAction(named: Text(String(localized: "Move 15 minutes later", comment: "VoiceOver action name that moves a task 15 minutes later on the timeline"))) {
+                    onNudge(HomeModel.dragSnapMinutes)
+                }
+                .accessibilityAction(named: Text(String(localized: "Move 15 minutes earlier", comment: "VoiceOver action name that moves a task 15 minutes earlier on the timeline"))) {
+                    onNudge(-HomeModel.dragSnapMinutes)
+                }
             deleteAction
                 .allowsHitTesting(isOpen)
         }
         .clipped()
         .onChange(of: openTaskID) { _, newValue in
             guard newValue != taskID, dragTranslation != 0 else { return }
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+            withAnimation(.checkeraSnap) {
                 dragTranslation = 0
             }
         }
@@ -84,7 +93,7 @@ struct SwipeableTaskRow<Content: View>: View {
 
     private func handleDragEnded(_ x: CGFloat) {
         let total = (isOpen ? Self.revealedOffset : 0) + x
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+        withAnimation(.checkeraSnap) {
             if total < Self.snapThreshold {
                 openTaskID = taskID
             } else if isOpen {
@@ -96,7 +105,7 @@ struct SwipeableTaskRow<Content: View>: View {
 
     private func rowTapped() {
         if isOpen {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+            withAnimation(.checkeraSnap) {
                 openTaskID = nil
                 dragTranslation = 0
             }
@@ -116,6 +125,11 @@ struct SwipeableTaskRow<Content: View>: View {
 /// vertical pans before they begin, releasing the touch to the ancestor
 /// `ScrollView`'s pan recognizer. Tap is handled here too — the overlay UIView
 /// would otherwise swallow it.
+///
+/// This overlay deliberately owns nothing vertical. Drag-to-reschedule is driven by
+/// `TimelineDragController`, whose long press lives on the timeline's `UIScrollView` itself —
+/// per-row recognizers for that gesture proved fatally exposed to the scroll view's touch
+/// cancellation and to row re-renders restructuring the hosting views mid-gesture.
 private struct HorizontalSwipeGesture: UIViewRepresentable {
     let onTap: () -> Void
     let onDragChanged: (CGFloat) -> Void
@@ -168,6 +182,7 @@ private struct HorizontalSwipeGesture: UIViewRepresentable {
         }
 
         @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+            // `translation(in:)` is a vector, so it is unaffected by the row's own `.offset`.
             let translation = gesture.translation(in: gesture.view)
             switch gesture.state {
             case .changed:
@@ -194,15 +209,16 @@ private struct HorizontalSwipeGesture: UIViewRepresentable {
 
 #Preview("Swipeable row — interactive") {
     @Previewable @State var openID: UUID? = nil
-    let task = DailyTask(title: "Team standup", startDate: .now, durationMinutes: 30, type: .regular)
-    let golden = DailyTask(title: "Deep work block", startDate: .now.addingTimeInterval(60 * 60), durationMinutes: 90, type: .golden)
+    let task = DailyTask(title: "Team standup", startDate: .now, durationMinutes: 30, color: .blue)
+    let golden = DailyTask(title: "Deep work block", startDate: .now.addingTimeInterval(60 * 60), durationMinutes: 90, color: .gold)
 
     VStack(spacing: 12) {
         SwipeableTaskRow(
             taskID: task.id,
             openTaskID: $openID,
             onDelete: { },
-            onTap: { }
+            onTap: { },
+            onNudge: { _ in }
         ) {
             TaskRowCompact(task: task)
                 .frame(height: 60)
@@ -212,7 +228,8 @@ private struct HorizontalSwipeGesture: UIViewRepresentable {
             taskID: golden.id,
             openTaskID: $openID,
             onDelete: { },
-            onTap: { }
+            onTap: { },
+            onNudge: { _ in }
         ) {
             TaskRowCompact(task: golden)
                 .frame(height: 80)

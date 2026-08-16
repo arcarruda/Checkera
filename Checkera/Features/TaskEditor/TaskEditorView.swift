@@ -6,6 +6,10 @@ struct TaskEditorView: View {
 
     @State private var model: TaskEditorModel
     @State private var expandedTimeField: ExpandedTimeField?
+    // The palette is collapsed behind the swatch button next to the title. Deliberately not
+    // folded into `expandedTimeField`: colour and a time wheel can be open at once without
+    // fighting for the same screen space.
+    @State private var isColorExpanded = false
     @Environment(\.dismiss) private var dismiss
 
     private let onSaved: (Day) -> Void
@@ -76,43 +80,31 @@ struct TaskEditorView: View {
         ScrollViewReader { proxy in
             Form {
                 Section {
-                    HStack(spacing: 8) {
-                        TextField(
-                            String(localized: "What needs doing?", comment: "Task title placeholder"),
-                            text: $model.title
-                        )
-                        .textInputAutocapitalization(.sentences)
-                        .accessibilityLabel(Text(String(localized: "Task title", comment: "Accessibility label for the title field")))
+                    VStack(spacing: 0) {
+                        HStack(spacing: 8) {
+                            TextField(
+                                String(localized: "What needs doing?", comment: "Task title placeholder"),
+                                text: $model.title
+                            )
+                            .textInputAutocapitalization(.sentences)
+                            .accessibilityLabel(Text(String(localized: "Task title", comment: "Accessibility label for the title field")))
 
-                        Button {
-                            model.type = (model.type == .golden) ? .regular : .golden
-                        } label: {
-                            Group {
-                                if model.type == .golden {
-                                    Image(systemName: "star.fill")
-                                        .foregroundStyle(LinearGradient(
-                                            colors: [.yellow, .orange],
-                                            startPoint: .top,
-                                            endPoint: .bottom
-                                        ))
-                                } else {
-                                    Image(systemName: "star")
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            .font(.title3)
-                            .frame(minWidth: 44, minHeight: 44)
-                            .contentShape(Rectangle())
+                            colorButton(selection: model.color)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text(String(localized: "Mark as golden", comment: "Accessibility label for the golden task toggle button")))
-                        .accessibilityValue(Text(model.type == .golden
-                            ? String(localized: "Golden", comment: "Accessibility value when task is marked golden")
-                            : String(localized: "Regular", comment: "Accessibility value when task is not marked golden")))
-                        .accessibilityAddTraits(model.type == .golden ? .isSelected : [])
+
+                        if isColorExpanded {
+                            TaskColorSwatchGrid(selection: collapsingColorBinding(model: model))
+                                .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
                     }
                 } header: {
                     Text(String(localized: "Title", comment: "Title section header"))
+                } footer: {
+                    // Only while the palette is open: the footer is what explains gold's alarm
+                    // behaviour in words, so it has to travel with the swatches, not with the title.
+                    if isColorExpanded {
+                        Text(String(localized: "Each color plays its own tone. Gold tasks alarm and can be snoozed.", comment: "Footer explaining what the task colour affects"))
+                    }
                 }
 
                 Section {
@@ -126,22 +118,6 @@ struct TaskEditorView: View {
                     .accessibilityLabel(Text(String(localized: "Task details", comment: "Accessibility label for the details field")))
                 } header: {
                     Text(String(localized: "Details", comment: "Details section header"))
-                }
-
-                Section {
-                    Picker(selection: $model.taskDay) {
-                        Text(String(localized: "Today", comment: "For: today option")).tag(Day.today)
-                        Text(String(localized: "Tomorrow", comment: "For: tomorrow option")).tag(Day.tomorrow)
-                    } label: {
-                        Text(String(localized: "For", comment: "For picker label"))
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: model.taskDay) { _, newDay in
-                        model.applyTaskDay(newDay)
-                    }
-                    .accessibilityLabel(Text(String(localized: "For", comment: "Accessibility label for day picker")))
-                } header: {
-                    Text(String(localized: "For", comment: "For section header"))
                 }
 
                 Section {
@@ -180,6 +156,22 @@ struct TaskEditorView: View {
                     Text(String(localized: "Schedule", comment: "Schedule section header"))
                 }
 
+                Section {
+                    Picker(selection: $model.taskDay) {
+                        Text(String(localized: "Today", comment: "For: today option")).tag(Day.today)
+                        Text(String(localized: "Tomorrow", comment: "For: tomorrow option")).tag(Day.tomorrow)
+                    } label: {
+                        Text(String(localized: "For", comment: "For picker label"))
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: model.taskDay) { _, newDay in
+                        model.applyTaskDay(newDay)
+                    }
+                    .accessibilityLabel(Text(String(localized: "For", comment: "Accessibility label for day picker")))
+                } header: {
+                    Text(String(localized: "For", comment: "For section header"))
+                }
+
                 if model.isEditing {
                     Section {
                         SlideToDeleteButton {
@@ -206,6 +198,58 @@ struct TaskEditorView: View {
                 }
             }
         }
+    }
+
+    /// The swatch at the trailing edge of the title field: shows the current colour, opens the palette.
+    ///
+    /// Gold keeps the star it wears in the grid, so the one colour that changes behaviour stays
+    /// identifiable here too rather than being carried by hue alone.
+    private func colorButton(selection: TaskColor) -> some View {
+        Button {
+            withAnimation { isColorExpanded.toggle() }
+        } label: {
+            ZStack {
+                Circle()
+                    .fill(selection.fill)
+                    .frame(width: 28, height: 28)
+                if selection.isAlarm {
+                    Image(systemName: "star.fill")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.white.opacity(0.9))
+                }
+                // Drawn always and faded, not inserted conditionally, so the row keeps one size.
+                Circle()
+                    .strokeBorder(Color.accentColor, lineWidth: 2)
+                    .frame(width: 38, height: 38)
+                    .opacity(isColorExpanded ? 1 : 0)
+            }
+            .frame(width: 44, height: 44)
+            .contentShape(Rectangle())
+        }
+        // `.borderless` and not `.plain`: the title field shares this row, and a plain button
+        // lets the row hand the tap to the text field instead.
+        .buttonStyle(.borderless)
+        .accessibilityLabel(Text(String(localized: "Color", comment: "Accessibility label for the colour button beside the task title")))
+        .accessibilityValue(Text(selection.title) + Text(verbatim: ", ") + Text(selection.behaviorDescription))
+        .accessibilityHint(Text(String(
+            localized: isColorExpanded
+                ? "Double-tap to close the colors"
+                : "Double-tap to choose a color",
+            comment: "Accessibility hint for the colour button beside the task title"
+        )))
+    }
+
+    /// Picking a colour closes the palette — the swatch button above already shows the choice,
+    /// so leaving the grid open would just hold space for a decision already made.
+    @MainActor
+    private func collapsingColorBinding(model: TaskEditorModel) -> Binding<TaskColor> {
+        Binding(
+            get: { model.color },
+            set: { newValue in
+                model.color = newValue
+                withAnimation { isColorExpanded = false }
+            }
+        )
     }
 
     private func formattedDuration(_ minutes: Int) -> String {

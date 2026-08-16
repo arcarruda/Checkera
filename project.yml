@@ -65,6 +65,10 @@ targets:
       - path: Checkera/Models/DailyTask.swift
       - path: Checkera/Models/TaskStatus.swift
       - path: Checkera/Models/TaskType.swift
+      # DailyTask references TaskColor, so the widget needs it even though it draws no
+      # task colours. TaskColor+Style.swift is deliberately app-only (SwiftUI + assets).
+      - path: Checkera/Models/TaskColor.swift
+      - path: Checkera/Models/NotificationTone.swift
       - path: Checkera/Models/SleepWindow.swift
       - path: Checkera/Models/TaskSnapshot.swift
       - path: Checkera/Persistence/PersistenceController.swift

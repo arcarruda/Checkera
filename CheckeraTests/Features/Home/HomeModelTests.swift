@@ -21,9 +21,31 @@ struct HomeModelTests {
     private func makeModel(
         now: Date? = nil,
         repository: any TaskRepository = StubTaskRepository(),
-        notifications: NotificationService? = nil
+        notifications: NotificationService? = nil,
+        settings: SettingsModel? = nil
     ) -> HomeModel {
-        HomeModel(clock: FixedClock(now ?? date()), repository: repository, notifications: notifications)
+        HomeModel(
+            clock: FixedClock(now ?? date()),
+            repository: repository,
+            notifications: notifications,
+            settings: settings
+        )
+    }
+
+    /// `HomeModel` only reschedules when it has *both* a notification service and settings, so
+    /// reschedule assertions need a real (isolated) settings store or they pass against a no-op.
+    private func makeSettings() -> SettingsModel {
+        let suite = "test-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        return SettingsModel(defaults: defaults)
+    }
+
+    private func makeNotifications(authorized: Bool = true) -> (NotificationService, StubNotificationCenter) {
+        let stub = StubNotificationCenter()
+        stub.authorizationGranted = authorized
+        stub.authorizationStatusValue = authorized ? .authorized : .denied
+        return (NotificationService(adapter: stub), stub)
     }
 
     // MARK: - Defaults
@@ -255,169 +277,89 @@ struct HomeModelTests {
         #expect(stub.deletedTasks.first?.id == task.id)
     }
 
-    // MARK: - bringInPlan
+    // MARK: - moveTask
 
-    @Test("bringInPlan(for: today) is nil when today has tasks")
-    func bringInPlanTodayNonEmpty() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let todayStart = cal.startOfDay(for: now)
-        let yesterdayStart = cal.date(byAdding: .day, value: -1, to: todayStart)!
-        stub.tasksByDate[todayStart] = [DailyTask(title: "t", startDate: now)]
-        stub.latestPastNonEmptyDayResult = yesterdayStart
+    @Test("moveTask writes the new start date, preserving duration")
+    func moveTaskWritesStartDate() async {
+        let repo = StubTaskRepository()
+        let now = date(hour: 10)
+        let task = DailyTask(title: "x", startDate: date(hour: 9), durationMinutes: 45)
+        let model = makeModel(now: now, repository: repo)
 
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
+        await model.moveTask(task, toMinuteOfDay: 18 * 60 + 30, on: .today)?.value
 
-        #expect(model.bringInPlan(for: .today) == nil)
+        #expect(repo.updatedTasks.count == 1)
+        #expect(task.startDate == date(hour: 18, minute: 30))
+        #expect(task.durationMinutes == 45)
     }
 
-    @Test("bringInPlan(for: today) returns plan when today empty and source exists")
-    func bringInPlanTodayEmptyWithSource() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let yesterdayStart = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: now))!
-        stub.latestPastNonEmptyDayResult = yesterdayStart
+    @Test("moveTask is a no-op when the time is unchanged")
+    func moveTaskNoOp() async {
+        let repo = StubTaskRepository()
+        let task = DailyTask(title: "x", startDate: date(hour: 9))
+        let model = makeModel(now: date(hour: 10), repository: repo)
 
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
+        await model.moveTask(task, toMinuteOfDay: 9 * 60, on: .today)?.value
 
-        let plan = model.bringInPlan(for: .today)
-        #expect(plan == DayCopyService.BringInPlan(source: yesterdayStart, target: .today))
+        #expect(repo.updatedTasks.isEmpty)
     }
 
-    @Test("bringInPlan(for: tomorrow) returns plan with today as source when today has tasks")
-    func bringInPlanTomorrowSourcedFromToday() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let todayStart = cal.startOfDay(for: now)
-        stub.tasksByDate[todayStart] = [DailyTask(title: "t", startDate: now)]
-        stub.latestPastNonEmptyDayResult = todayStart
+    @Test("moveTask reschedules the notification for a future task")
+    func moveTaskReschedules() async {
+        let repo = StubTaskRepository()
+        let (notifications, stub) = makeNotifications()
+        let now = date(hour: 10)
+        let task = DailyTask(title: "x", startDate: date(hour: 16))
+        let model = makeModel(
+            now: now,
+            repository: repo,
+            notifications: notifications,
+            settings: makeSettings()
+        )
 
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
+        await model.moveTask(task, toMinuteOfDay: 18 * 60, on: .today)?.value
 
-        let plan = model.bringInPlan(for: .tomorrow)
-        #expect(plan == DayCopyService.BringInPlan(source: todayStart, target: .tomorrow))
+        #expect(stub.canceledIdentifiers.contains(task.id.uuidString))
+        #expect(stub.scheduledRequests.count == 1)
     }
 
-    @Test("bringInPlan is nil when no past timeline exists")
-    func bringInPlanNoSource() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        stub.latestPastNonEmptyDayResult = nil
+    @Test("moveTask into the past cancels without rescheduling")
+    func moveTaskIntoPastCancels() async {
+        let repo = StubTaskRepository()
+        let (notifications, stub) = makeNotifications()
+        let now = date(hour: 14)
+        let task = DailyTask(title: "x", startDate: date(hour: 16))
+        let model = makeModel(
+            now: now,
+            repository: repo,
+            notifications: notifications,
+            settings: makeSettings()
+        )
 
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
+        await model.moveTask(task, toMinuteOfDay: 8 * 60, on: .today)?.value
 
-        #expect(model.bringInPlan(for: .today) == nil)
-        #expect(model.bringInPlan(for: .tomorrow) == nil)
+        #expect(stub.canceledIdentifiers.contains(task.id.uuidString))
+        #expect(stub.scheduledRequests.isEmpty)
     }
 
-    @Test("bringInPlan(for: yesterday) is always nil")
-    func bringInPlanYesterdayAlwaysNil() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let yesterdayStart = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: now))!
-        stub.latestPastNonEmptyDayResult = yesterdayStart
+    @Test("moveTask without notifications or settings still writes")
+    func moveTaskWithoutNotificationDependencies() async {
+        let repo = StubTaskRepository()
+        let task = DailyTask(title: "x", startDate: date(hour: 9))
+        let model = makeModel(now: date(hour: 10), repository: repo)
 
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
+        await model.moveTask(task, toMinuteOfDay: 11 * 60, on: .today)?.value
 
-        #expect(model.bringInPlan(for: .yesterday) == nil)
+        #expect(repo.updatedTasks.count == 1)
+        #expect(task.startDate == date(hour: 11))
     }
 
-    @Test("bringInPlan handles a far-past source")
-    func bringInPlanFarPastSource() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let farPast = cal.date(byAdding: .day, value: -30, to: cal.startOfDay(for: now))!
-        stub.latestPastNonEmptyDayResult = farPast
+    @Test("moveTask swallows repository errors")
+    func moveTaskSwallowsErrors() async {
+        let repo = StubTaskRepository()
+        repo.shouldThrow = true
+        let model = makeModel(repository: repo)
 
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
-
-        let plan = model.bringInPlan(for: .today)
-        #expect(plan?.source == farPast)
-        #expect(plan?.target == .today)
-    }
-
-    // MARK: - latestPastNonEmptyDay
-
-    @Test("loadAllDays populates latestPastNonEmptyDay from repository")
-    func loadAllDaysPopulatesLatest() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let yesterdayStart = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: now))!
-        stub.latestPastNonEmptyDayResult = yesterdayStart
-
-        let model = makeModel(now: now, repository: stub)
-        await model.loadAllDays()
-
-        #expect(model.latestPastNonEmptyDay == yesterdayStart)
-    }
-
-    @Test("loadAllDays sets latestPastNonEmptyDay to nil when repository throws")
-    func loadAllDaysLatestNilOnError() async {
-        let stub = StubTaskRepository()
-        stub.shouldThrow = true
-
-        let model = makeModel(repository: stub)
-        await model.loadAllDays()
-
-        #expect(model.latestPastNonEmptyDay == nil)
-    }
-
-    // MARK: - acceptBringIn
-
-    @Test("acceptBringIn invokes repository.copyTasks with plan source and target's date")
-    func acceptBringInCallsRepository() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let source = cal.date(byAdding: .day, value: -5, to: cal.startOfDay(for: now))!
-        let model = makeModel(now: now, repository: stub)
-
-        await model.acceptBringIn(.init(source: source, target: .today))
-
-        #expect(stub.copyCalls.count == 1)
-        let call = stub.copyCalls.first!
-        #expect(call.from == source)
-        #expect(cal.isDate(call.to, inSameDayAs: now))
-    }
-
-    @Test("acceptBringIn for tomorrow uses tomorrow's date as target")
-    func acceptBringInTomorrow() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let source = cal.startOfDay(for: now)
-        let model = makeModel(now: now, repository: stub)
-
-        await model.acceptBringIn(.init(source: source, target: .tomorrow))
-
-        let call = stub.copyCalls.first!
-        #expect(call.from == source)
-        #expect(cal.isDate(call.to, inSameDayAs: cal.date(byAdding: .day, value: 1, to: now)!))
-    }
-
-    @Test("acceptBringIn reloads all days after copy")
-    func acceptBringInReloads() async {
-        let stub = StubTaskRepository()
-        let now = date()
-        let cal = Calendar.current
-        let yesterdayStart = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: now))!
-        stub.tasksByDate[yesterdayStart] = [DailyTask(title: "y", startDate: yesterdayStart)]
-        let model = makeModel(now: now, repository: stub)
-
-        await model.acceptBringIn(.init(source: yesterdayStart, target: .today))
-
-        #expect(model.tasks(for: .yesterday).count == 1)
+        await model.moveTask(DailyTask(title: "x", startDate: date(hour: 9)), toMinuteOfDay: 600, on: .today)?.value
     }
 }

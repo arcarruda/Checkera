@@ -97,8 +97,15 @@ struct TodayTimelineProvider: TimelineProvider {
             sortBy: [SortDescriptor(\.startDate)]
         )
 
+        // Deliberately the non-fatal container: the widget can be the first process to open the
+        // store after an app update, and crashing here would leave an unrecoverable blank widget.
+        guard let container = PersistenceController.sharedIfAvailable else {
+            logger.error("widget store unavailable")
+            return []
+        }
+
         do {
-            let context = ModelContext(PersistenceController.shared)
+            let context = ModelContext(container)
             let tasks = try context.fetch(descriptor)
             return tasks.map(TaskSnapshot.init)
         } catch {

@@ -1,11 +1,6 @@
 import SwiftUI
 import os
 
-enum AppTab: Hashable {
-    case home
-    case settings
-}
-
 private enum EditorPresentation: Identifiable {
     case add(prefilledStart: Date)
     case edit(UUID)
@@ -20,50 +15,41 @@ private enum EditorPresentation: Identifiable {
 
 struct AppRoot: View {
 
-    @State private var selection: AppTab = .home
     @State private var editorPresentation: EditorPresentation?
     @State private var refreshTrigger = UUID()
     @State private var selectedDay: Day = .today
-    @State private var tabBarHeight: CGFloat = 0
+    @State private var isShowingSettings = false
     @Environment(\.scenePhase) private var scenePhase
     let env: AppEnvironment
 
     private let logger = Logger(subsystem: "app.checkera", category: "AppRoot")
 
     var body: some View {
-        TabView(selection: $selection) {
-            NavigationStack {
-                HomeView(
-                    env: env,
-                    selectedDay: $selectedDay,
-                    refreshTrigger: refreshTrigger,
-                    onEditTask: { id in
-                        editorPresentation = .edit(id)
-                    },
-                    onCreateTaskAt: { date in
-                        editorPresentation = .add(prefilledStart: date)
-                    }
-                )
-            }
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.home)
-
-            NavigationStack {
-                SettingsView(model: env.settings, notifications: env.notifications)
-            }
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.settings)
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            AppTabBar(
-                selection: $selection,
-                onAddTapped: {
+        NavigationStack {
+            HomeView(
+                env: env,
+                selectedDay: $selectedDay,
+                refreshTrigger: refreshTrigger,
+                onEditTask: { id in
+                    editorPresentation = .edit(id)
+                },
+                onCreateTaskAt: { date in
+                    editorPresentation = .add(prefilledStart: date)
+                },
+                onAddTask: {
                     editorPresentation = .add(prefilledStart: prefilledStart())
+                },
+                onOpenSettings: {
+                    isShowingSettings = true
                 }
             )
         }
-        .onAppTabBarHeightChange { tabBarHeight = $0 }
-        .environment(\.appTabBarHeight, tabBarHeight)
+        .sheet(isPresented: $isShowingSettings) {
+            NavigationStack {
+                SettingsView(model: env.settings, notifications: env.notifications)
+            }
+            .presentationDragIndicator(.visible)
+        }
         .sheet(item: $editorPresentation, onDismiss: {
             refreshTrigger = UUID()
         }) { presentation in
@@ -106,12 +92,10 @@ struct AppRoot: View {
         guard let route = ScreenshotMode.requestedRoute else { return }
         switch route {
         case .home:
-            selection = .home
             selectedDay = .today
         case .settings:
-            selection = .settings
+            isShowingSettings = true
         case .editor:
-            selection = .home
             selectedDay = .today
             editorPresentation = .edit(ScreenshotMode.editorShowcaseID)
         }
@@ -127,7 +111,7 @@ struct AppRoot: View {
             for task in tasks {
                 await env.notifications.schedule(
                     task,
-                    tone: env.settings.tone(for: task.type),
+                    tone: env.settings.tone(for: task.color),
                     now: now
                 )
             }
@@ -138,7 +122,7 @@ struct AppRoot: View {
 
     private func handleURL(_ url: URL) {
         guard url.scheme == "checkera", url.host == "today" else { return }
-        selection = .home
+        isShowingSettings = false
         selectedDay = .today
     }
 

@@ -2,8 +2,6 @@ import SwiftUI
 
 struct EmptyDayPlaceholder: View {
     let day: Day
-    let bringInPlan: DayCopyService.BringInPlan?
-    let onBringIn: () -> Void
 
     var body: some View {
         ContentUnavailableView {
@@ -14,11 +12,6 @@ struct EmptyDayPlaceholder: View {
             }
         } description: {
             Text(emptyDescription)
-        } actions: {
-            if bringInPlan != nil {
-                BringInTasksButton(onTap: onBringIn)
-                    .padding(.top, 8)
-            }
         }
     }
 
@@ -33,28 +26,20 @@ struct EmptyDayPlaceholder: View {
     private var emptyDescription: LocalizedStringResource {
         switch day {
         case .yesterday: "There weren't any tasks scheduled for yesterday."
-        case .today: "Tap the Add tab to schedule one."
+        case .today: "Tap + to schedule one."
         case .tomorrow: "Plan ahead — add tasks for tomorrow."
         }
     }
 }
 
-#Preview("Today, no plan") {
-    EmptyDayPlaceholder(day: .today, bringInPlan: nil, onBringIn: {})
+#Preview("Yesterday") {
+    EmptyDayPlaceholder(day: .yesterday)
 }
 
-#Preview("Today, with plan") {
-    EmptyDayPlaceholder(
-        day: .today,
-        bringInPlan: DayCopyService.BringInPlan(source: .now, target: .today),
-        onBringIn: {}
-    )
+#Preview("Today") {
+    EmptyDayPlaceholder(day: .today)
 }
 
-#Preview("Tomorrow, with plan") {
-    EmptyDayPlaceholder(
-        day: .tomorrow,
-        bringInPlan: DayCopyService.BringInPlan(source: .now, target: .tomorrow),
-        onBringIn: {}
-    )
+#Preview("Tomorrow") {
+    EmptyDayPlaceholder(day: .tomorrow)
 }

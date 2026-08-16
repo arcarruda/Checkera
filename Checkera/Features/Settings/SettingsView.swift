@@ -15,6 +15,7 @@ struct SettingsView: View {
     @State private var authorizationStatus: UNAuthorizationStatus = .notDetermined
     @State private var expandedSleepField: ExpandedSleepField?
     @State private var testAlert: TestAlert?
+    @Environment(\.dismiss) private var dismiss
     private let notifications: NotificationService
 
     init(model: SettingsModel, notifications: NotificationService) {
@@ -59,39 +60,23 @@ struct SettingsView: View {
             }
 
             Section {
-                Picker(selection: $model.regularTone) {
-                    ForEach(NotificationTone.allCases.filter { $0.category == .regular }, id: \.self) { tone in
-                        Text(tone.title).tag(tone)
-                    }
-                } label: {
-                    Label {
-                        Text(String(localized: "Regular tone", comment: "Picker label for regular task tone"))
-                    } icon: {
-                        Image(systemName: "bell")
-                    }
-                }
-            } header: {
-                Text(String(localized: "Regular tasks", comment: "Settings section header for regular tasks"))
-            } footer: {
-                Text(String(localized: "Played when a regular task starts.", comment: "Footer explaining when regular tone plays"))
-            }
-
-            Section {
-                Picker(selection: $model.goldenTone) {
-                    ForEach(NotificationTone.allCases.filter { $0.category == .golden }, id: \.self) { tone in
-                        Text(tone.title).tag(tone)
-                    }
-                } label: {
-                    Label {
-                        Text(String(localized: "Golden tone", comment: "Picker label for golden task tone"))
-                    } icon: {
-                        Image(systemName: "star")
+                ForEach(TaskColor.allCases) { color in
+                    Picker(selection: model.toneBinding(for: color)) {
+                        ForEach(NotificationTone.allCases.filter { ($0.category == .golden) == color.isAlarm }, id: \.self) { tone in
+                            Text(tone.title).tag(tone)
+                        }
+                    } label: {
+                        Label {
+                            Text(color.title)
+                        } icon: {
+                            TaskColorDot(color: color)
+                        }
                     }
                 }
             } header: {
-                Text(String(localized: "Golden tasks", comment: "Settings section header for golden tasks"))
+                Text(String(localized: "Task tones", comment: "Settings section header for the per-colour tone pickers"))
             } footer: {
-                Text(String(localized: "Played when a golden task starts.", comment: "Footer explaining when golden tone plays"))
+                Text(String(localized: "Each colour plays its own tone when a task starts. Gold tasks alarm: they arrive as time sensitive and can be snoozed.", comment: "Footer explaining per-colour tones and what makes gold different"))
             }
 
             Section {
@@ -131,6 +116,13 @@ struct SettingsView: View {
         }
         .navigationTitle(Text(String(localized: "Settings", comment: "Settings screen title")))
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(String(localized: "Done", comment: "Button that dismisses the settings sheet")) {
+                    dismiss()
+                }
+            }
+        }
         .task {
             authorizationStatus = await notifications.authorizationStatus()
         }
@@ -259,11 +251,15 @@ extension NotificationTone {
 
 #if DEBUG
 #Preview {
-    NavigationStack {
-        SettingsView(
-            model: SettingsModel(defaults: UserDefaults(suiteName: "preview")!),
-            notifications: NotificationService(adapter: PreviewNotificationCenter())
-        )
-    }
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            NavigationStack {
+                SettingsView(
+                    model: SettingsModel(defaults: UserDefaults(suiteName: "preview")!),
+                    notifications: NotificationService(adapter: PreviewNotificationCenter())
+                )
+            }
+            .presentationDragIndicator(.visible)
+        }
 }
 #endif

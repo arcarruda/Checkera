@@ -19,7 +19,7 @@ final class TaskEditorModel {
     var startDate: Date
     var durationMinutes: Int
     var endTimeWasManuallyEdited: Bool
-    var type: TaskType
+    var color: TaskColor
     var taskDay: Day
 
     // MARK: - State
@@ -62,7 +62,7 @@ final class TaskEditorModel {
             self.startDate = start
             self.durationMinutes = 30
             self.endTimeWasManuallyEdited = false
-            self.type = .regular
+            self.color = .fallback
             self.taskDay = Self.dayForDate(start, relativeTo: clock.now)
             self.editingTask = nil
         case .edit(let id):
@@ -73,7 +73,7 @@ final class TaskEditorModel {
                     self.startDate = task.startDate
                     self.durationMinutes = task.durationMinutes
                     self.endTimeWasManuallyEdited = task.endTimeWasManuallyEdited
-                    self.type = task.type
+                    self.color = task.color
                     self.taskDay = Self.dayForDate(task.startDate, relativeTo: clock.now)
                     self.editingTask = task
                 } else {
@@ -82,7 +82,7 @@ final class TaskEditorModel {
                     self.startDate = clock.now
                     self.durationMinutes = 30
                     self.endTimeWasManuallyEdited = false
-                    self.type = .regular
+                    self.color = .fallback
                     self.taskDay = .today
                     self.editingTask = nil
                     self.loadFailed = true
@@ -93,7 +93,7 @@ final class TaskEditorModel {
                 self.startDate = clock.now
                 self.durationMinutes = 30
                 self.endTimeWasManuallyEdited = false
-                self.type = .regular
+                self.color = .fallback
                 self.taskDay = .today
                 self.editingTask = nil
                 self.loadFailed = true
@@ -167,7 +167,7 @@ final class TaskEditorModel {
                     startDate: startDate,
                     durationMinutes: durationMinutes,
                     endTimeWasManuallyEdited: endTimeWasManuallyEdited,
-                    type: type
+                    color: color
                 )
                 try repository.insert(task)
                 editingTask = task
@@ -183,7 +183,7 @@ final class TaskEditorModel {
                     existing.startDate = self.startDate
                     existing.durationMinutes = self.durationMinutes
                     existing.endTimeWasManuallyEdited = self.endTimeWasManuallyEdited
-                    existing.type = self.type
+                    existing.color = self.color
                 }
                 await rescheduleNotification(for: task)
             }
@@ -215,13 +215,13 @@ final class TaskEditorModel {
     private func scheduleNotification(for task: DailyTask) async {
         let granted = await notifications.requestAuthorizationIfNeeded()
         guard granted else { return }
-        await notifications.schedule(task, tone: settings.tone(for: task.type), now: clock.now)
+        await notifications.schedule(task, tone: settings.tone(for: task.color), now: clock.now)
     }
 
     private func rescheduleNotification(for task: DailyTask) async {
         let granted = await notifications.requestAuthorizationIfNeeded()
         if granted {
-            await notifications.reschedule(task, tone: settings.tone(for: task.type), now: clock.now)
+            await notifications.reschedule(task, tone: settings.tone(for: task.color), now: clock.now)
         } else {
             await notifications.cancel(id: task.id)
         }

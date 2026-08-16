@@ -11,16 +11,7 @@ struct DayPage: View {
         let tasks = model.tasks(for: day)
         Group {
             if tasks.isEmpty {
-                let plan = model.bringInPlan(for: day)
-                EmptyDayPlaceholder(
-                    day: day,
-                    bringInPlan: plan,
-                    onBringIn: {
-                        if let plan {
-                            Task { await model.acceptBringIn(plan) }
-                        }
-                    }
-                )
+                EmptyDayPlaceholder(day: day)
             } else {
                 DayTimelineView(
                     day: day,
